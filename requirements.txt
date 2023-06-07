@@ -17,6 +17,8 @@ decorator==5.0.9
 defusedxml==0.7.1
 distlib==0.3.6
 Django==4.2.1
+django-environ==0.10.0
+django-extensions==3.2.3
 entrypoints==0.3
 filelock==3.12.0
 idna==2.10
@@ -61,6 +63,7 @@ Pillow==8.2.0
 platformdirs==3.5.1
 prometheus-client==0.11.0
 prompt-toolkit==3.0.18
+psycopg2==2.9.6
 ptyprocess==0.7.0
 pycodestyle==2.7.0
 pycparser==2.20
@@ -99,5 +102,3 @@ webencodings==0.5.1
 websocket-client==1.1.0
 widgetsnbextension==3.5.1
 xlrd==2.0.1
-django-environ==0.10.0
-psycopg2==2.9.6

@@ -4,7 +4,7 @@ from django.db import models
 
 class Genre(models.Model):
     name = models.CharField(
-        max_length=250, help_text='Enter a book genre')
+        max_length=255, help_text='Enter a book genre')
 
     class Meta:
         ordering = ['name']
@@ -15,29 +15,31 @@ class Genre(models.Model):
 
 class Language(models.Model):
     name = models.CharField(
-        max_length=250, help_text='Enter a book genre')
+        max_length=255, help_text='Enter a book genre')
 
     def __str__(self):
         return self.name
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=250)
-    series = models.CharField(null=True, blank=True)
+    title = models.CharField(max_length=255)
+    series = models.CharField(max_length=255, null=True, blank=True)
     author = models.ManyToManyField(
         'Author', help_text='Select an author for this book')
 
     description = models.TextField(
         max_length=1000, help_text='Enter a brief description of the book')
-    edition = models.CharField(max_length=250, null=True, blank=True)
+    edition = models.CharField(max_length=255, null=True, blank=True)
     isbn = models.CharField('ISBN', max_length=13, unique=True)
     pages = models.IntegerField(null=True, blank=True)
-    publisher = models.CharField(max_length=250, null=True, blank=True)
+    publisher = models.CharField(max_length=255, null=True, blank=True)
     book_image = models.CharField(max_length=1000, null=True, blank=True)
     BOOK_FORMAT = (
         ('p', 'Paperback'),
-        ('e', 'E-book'),
-        ('h', 'Hardcover'),
+        ('m', 'Mass Market Paperback'),
+        ('k', 'Kindle edition'),
+        ('e', 'Ebook'),
+        ('h', 'Hardcover')
     )
     book_format = models.CharField(
         max_length=1,
@@ -88,7 +90,7 @@ class BookInstance(models.Model):
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=255)
 
     class Meta:
         ordering = ['name']
