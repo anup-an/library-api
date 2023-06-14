@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "src/api/axios";
+import { registerUser } from "src/api/user";
 import Button from "src/components/ui/Button";
+import { isSuccess } from "src/types/ApiTypes";
 
 const Register = () => {
   const history = useNavigate();
   const [registerDetails, setRegisterDetails] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     const response = await registerUser(registerDetails);
-    if (response.status === 201) {
+    if (isSuccess(response)) {
       history("/login");
     }
   };

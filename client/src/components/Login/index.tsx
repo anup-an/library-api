@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "src/api/axios";
+import { loginUser } from "src/api/user";
 import "src/components/Login/Login.scss";
 import Button from "src/components/ui/Button";
+import { isSuccess } from "src/types/ApiTypes";
 
 const Login = () => {
   const history = useNavigate();
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const response = await loginUser(credentials)
-    if (response.status === 200) {
+    if (isSuccess(response)) {
       history('/')
     }
   };
