@@ -1,19 +1,28 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { DispatchContext } from "src/App";
+import { AUTHENTICATE } from "src/actions/authenticate";
 import { loginUser } from "src/api/user";
 import "src/components/Login/Login.scss";
 import Button from "src/components/ui/Button";
 import { isSuccess } from "src/types/ApiTypes";
+import { authenticated } from "src/types/authenticate";
 
 const Login = () => {
   const history = useNavigate();
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const { dispatch } = useContext(DispatchContext);
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  });
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const response = await loginUser(credentials)
+    const response = await loginUser(credentials);
     if (isSuccess(response)) {
-      history('/')
+      dispatch({ type: AUTHENTICATE, payload: authenticated });
+      history("/");
     }
   };
 
