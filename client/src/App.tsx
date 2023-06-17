@@ -5,7 +5,7 @@ import { AppState, appReducer, initialState } from "src/reducer";
 import { createContext, useReducer } from "react";
 import { AppActions } from "./actions";
 
-const getInitialState = () => {
+const getInitialState = (): AppState => {
   const auth = localStorage.getItem("authStatus");
   return auth
     ? { ...initialState, authStatus: JSON.parse(auth) }
