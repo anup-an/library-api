@@ -22,6 +22,7 @@ const Login = () => {
     const response = await loginUser(credentials);
     if (isSuccess(response)) {
       dispatch({ type: AUTHENTICATE, payload: authenticated });
+      localStorage.setItem('authStatus', JSON.stringify(authenticated))
       history("/");
     }
   };

@@ -5,18 +5,25 @@ import { AppState, appReducer, initialState } from "src/reducer";
 import { createContext, useReducer } from "react";
 import { AppActions } from "./actions";
 
+const getInitialState = () => {
+  const auth = localStorage.getItem("authStatus");
+  return auth
+    ? { ...initialState, authStatus: JSON.parse(auth) }
+    : initialState;
+};
+
 export const StateContext = createContext<{ state: AppState }>({
-  state: initialState,
+  state: getInitialState(),
 });
 
-export const DispatchContext = createContext<{ dispatch: React.Dispatch<AppActions> }>(
-  {
-    dispatch: () => null,
-  }
-);
+export const DispatchContext = createContext<{
+  dispatch: React.Dispatch<AppActions>;
+}>({
+  dispatch: () => null,
+});
 
 function App() {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [state, dispatch] = useReducer(appReducer, getInitialState());
 
   return (
     <DispatchContext.Provider value={{ dispatch }}>
