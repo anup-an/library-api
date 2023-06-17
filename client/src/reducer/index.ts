@@ -1,13 +1,13 @@
 import { AppActions } from "src/actions";
 import { AUTHENTICATE } from "src/actions/authenticate";
-import { Authenticated, Unauthenticated, authenticated } from "src/types/authenticate";
+import { Authenticated, Unauthenticated, unauthenticated } from "src/types/authenticate";
 
 export interface AppState {
     authStatus: Authenticated | Unauthenticated
 }
 
 export const initialState: AppState = {
-    authStatus: authenticated
+    authStatus: unauthenticated
 }
 
 
