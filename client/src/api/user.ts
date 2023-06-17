@@ -1,6 +1,8 @@
 import { IgnoreResponseDecoder } from "src/decoders/common";
 import axios, { ApiError } from "./axios";
 import { LoginPayload, RegisterPayload } from "src/types/authenticate";
+import { User } from "src/types/user";
+import { UserDecoder } from "src/decoders/user";
 
 export const loginUser = async (payload: LoginPayload) => {
   return await axios.post<unknown, ApiError>(
@@ -26,8 +28,9 @@ export const logoutUser = async () => {
 };
 
 export const fetchUser = async () => {
-  return await axios.get<unknown, ApiError>(
+  return await axios.get<User, ApiError>(
     "http://127.0.0.1:8000/api/user/",
-    IgnoreResponseDecoder
+    UserDecoder,
+    { withCredentials: true }
   );
 };
