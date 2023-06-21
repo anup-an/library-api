@@ -1,3 +1,5 @@
+import _ from "lodash"
+
 export type Nullable<T> = T | null
 
 export type Success<T> = {
@@ -38,3 +40,5 @@ export const isLoading = <T, E>(data: ApiData<T, E>): boolean => data.type === '
 export const isFailure = <T, E>(data: ApiData<T, E>): boolean => data.type === 'failure'
 
 export const extractDataOrNull = <T, E>(data: ApiData<T, E>) => isSuccess(data) ? (data as Success<T>).data : null
+
+export const pickDataOrDefault = <T, E, K>(data: ApiData<T, E>, prop: keyof T, defaultValue: K): K => isSuccess(data) ? (_.get((data as Success<T>).data, prop)) : defaultValue
