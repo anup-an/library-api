@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import BookDetailsPage from "src/views/BookDetailsPage";
 import BookListPage from "src/views/BookListPage";
 import LandingPage from "src/views/LandingPage";
 import LoginPage from "src/views/LoginPage";
@@ -13,6 +14,7 @@ const Routers = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/user" element={<UserPage />} />
       <Route path="/books" element={<BookListPage />} />
+      <Route path="/books/:id" element={<BookDetailsPage />} />
     </Routes>
   );
 };
