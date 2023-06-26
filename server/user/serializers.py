@@ -1,14 +1,17 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from book.serializers import BookInstanceSerializer
 from user.models import User
 
 UserModel = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    books_onloan = BookInstanceSerializer(many=True)
+
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username', 'books_onloan']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

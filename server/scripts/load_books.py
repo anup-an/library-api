@@ -2,6 +2,7 @@ import csv
 import itertools
 import re
 from book.models import Book, Genre, Language, Author
+from book.models import BookInstance
 
 
 def run():
@@ -47,3 +48,7 @@ def run():
                 book.save()
                 book.author.set(author_instances)
                 book.genres.set(genre_instances)
+
+                bookInstance = BookInstance(
+                    book=book, due_date=None, status='f')
+                bookInstance.save()
