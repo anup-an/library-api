@@ -29,3 +29,10 @@ export interface Book {
   genres: Genre[];
   language: Language[];
 }
+
+export interface BookInstance {
+  id: string;
+  book: Book;
+  due_date: string;
+  status: string;
+}

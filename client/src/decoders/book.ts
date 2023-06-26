@@ -37,3 +37,12 @@ export const BookListDecoder = object({
   previous: nullable(string()),
   results: array(BookDecoder),
 });
+
+const BookInstanceDecoder = object({
+  id: string(),
+  book: BookDecoder,
+  due_date: string(),
+  status: string(),
+});
+
+export const BookInstanceListDecoder = array(BookInstanceDecoder);

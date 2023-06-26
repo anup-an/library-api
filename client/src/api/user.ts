@@ -34,3 +34,12 @@ export const fetchUser = async () => {
     { withCredentials: true }
   );
 };
+
+export const borrowBook = async (id: number) => {
+  return await axios.post<unknown, ApiError>(
+    "http://127.0.0.1:8000/api/user/borrow-book",
+    IgnoreResponseDecoder,
+    { id },
+    { withCredentials: true }
+  );
+};
