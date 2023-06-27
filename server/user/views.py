@@ -32,6 +32,18 @@ class UserView(viewsets.ModelViewSet):
             user.books_onloan.add(book)
             return Response(status=status.HTTP_200_OK)
 
+    def return_book(self, request):
+        id = request.data.get('id')
+        with transaction.atomic():
+            book = BookInstance.objects.get(
+                id=id)
+            book.status = 'f'
+            book.due_date = None
+            book.save()
+            user = User.objects.get(id=request.user.id)
+            user.books_onloan.delete(book)
+            return Response(status=status.HTTP_200_OK)
+
 
 class UserRegistration(APIView):
     def post(self, request):
