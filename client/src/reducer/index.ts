@@ -1,21 +1,25 @@
 import { AppActions } from "src/actions";
-import { AUTHENTICATE } from "src/actions/authenticate";
-import { Authenticated, Unauthenticated, unauthenticated } from "src/types/authenticate";
+import { BooksState, bookReducer, bookState } from "src/reducer/book";
+import { AuthState, authReducer, authState } from "src/reducer/authenticate";
 
 export interface AppState {
-    authStatus: Authenticated | Unauthenticated
+  authStatus: AuthState;
+  book: BooksState;
 }
 
 export const initialState: AppState = {
-    authStatus: unauthenticated
-}
+  book: bookState,
+  authStatus: authState,
+};
 
-
-export const appReducer = (state: AppState = initialState, action: AppActions) => {
-  switch (action.type) {
-    case AUTHENTICATE:
-      return { ...state, authStatus: action.payload };
-    default:
-      return state;
-  }
-}
+export const appReducer = (
+  state: AppState = initialState,
+  action: AppActions
+) => {
+  state = {
+    ...state,
+    authStatus: authReducer(state.authStatus, action),
+    book: bookReducer(state.book, action),
+  };
+  return state;
+};
