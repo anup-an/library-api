@@ -3,8 +3,9 @@ import axios, { ApiError } from "./axios";
 import { LoginPayload, RegisterPayload } from "src/types/authenticate";
 import { User } from "src/types/user";
 import { UserDecoder } from "src/decoders/user";
+import { ApiData } from "src/types/ApiTypes";
 
-export const loginUser = async (payload: LoginPayload) => {
+export const loginUser = async (payload: LoginPayload): Promise<ApiData<unknown, ApiError>> => {
   return await axios.post<unknown, ApiError>(
     "http://127.0.0.1:8000/api/user/login",
     IgnoreResponseDecoder,
@@ -12,7 +13,7 @@ export const loginUser = async (payload: LoginPayload) => {
   );
 };
 
-export const registerUser = async (payload: RegisterPayload) => {
+export const registerUser = async (payload: RegisterPayload): Promise<ApiData<unknown, ApiError>> => {
   return await axios.post<unknown, ApiError>(
     "http://127.0.0.1:8000/api/user/register",
     IgnoreResponseDecoder,
@@ -20,14 +21,14 @@ export const registerUser = async (payload: RegisterPayload) => {
   );
 };
 
-export const logoutUser = async () => {
+export const logoutUser = async (): Promise<ApiData<unknown, ApiError>> => {
   return await axios.post<unknown, ApiError>(
     "http://127.0.0.1:8000/api/user/logout",
     IgnoreResponseDecoder
   );
 };
 
-export const fetchUser = async () => {
+export const fetchUser = async (): Promise<ApiData<User, ApiError>> => {
   return await axios.get<User, ApiError>(
     "http://127.0.0.1:8000/api/user/",
     UserDecoder,
@@ -35,7 +36,7 @@ export const fetchUser = async () => {
   );
 };
 
-export const borrowBook = async (id: number) => {
+export const borrowBook = async (id: number): Promise<ApiData<unknown, ApiError>> => {
   return await axios.post<unknown, ApiError>(
     "http://127.0.0.1:8000/api/user/borrow-book",
     IgnoreResponseDecoder,
@@ -43,3 +44,12 @@ export const borrowBook = async (id: number) => {
     { withCredentials: true }
   );
 };
+
+export const returnBook = async (id: string): Promise<ApiData<unknown, ApiError>> => {
+  return await axios.post<unknown, ApiError>(
+    "http://127.0.0.1:8000/api/user/return-book",
+    IgnoreResponseDecoder,
+    { id },
+    { withCredentials: true }
+  )
+}
