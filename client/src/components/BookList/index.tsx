@@ -1,24 +1,35 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchBooks } from "src/api/book";
 import { pickDataOrDefault } from "src/types/ApiTypes";
 import { Book } from "src/types/book";
 import "./BookList.scss";
 import { useNavigate } from "react-router-dom";
+import { StateContext } from "src/App";
+import { ListQuery } from "src/types/common";
 
 const BookList = () => {
   const [books, setBooks] = useState<Book[]>([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { state } = useContext(StateContext);
 
   const openDetails = (id: number) => {
-    navigate(`/books/${id}`)
-  }
+    navigate(`/books/${id}`);
+  };
 
   useEffect(() => {
     (async () => {
-      const bookList = await fetchBooks();
+      const queryObj: ListQuery = {
+        search: state.book.search,
+        search_fields: state.book.search_fields,
+        filter: {},
+        ordering: "",
+        page: 1,
+        page_size: 20,
+      };
+      const bookList = await fetchBooks(queryObj);
       setBooks(pickDataOrDefault(bookList, "results", []));
     })();
-  }, []);
+  }, [state.book.search, state.book.search_fields]);
 
   return (
     <div className="book-list">
