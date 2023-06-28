@@ -9,17 +9,24 @@ const getFilterString = (filterObj: FilterQuery): string => {
   return !_.isEmpty(stringArray) ? stringArray.join("&") : "";
 };
 
+const getSearchString = (search: string, search_fields: string[]) => {
+  const searchFieldsString = search_fields.map(field => `search_fields=${field}`).join('&')
+  return `search=${search}&${searchFieldsString}`
+
+}
+
 export const buildQueryString = (queryObject: ListQuery): string => {
   const filterString = getFilterString(queryObject.filter);
-  const filteredQueryObj: Omit<ListQuery, "filter"> = _.omit(
+  const searchString = getSearchString(queryObject.search, queryObject.search_fields)
+  const filteredQueryObj: Omit<ListQuery, "filter" | "search" | "search_fields"> = _.omit(
     queryObject,
-    "filter"
+    ["filter", "search", "search_fields"]
   );
   const remainingString = _.keys(filteredQueryObj)
     .map(
       (key) =>
-        `${key}=${filteredQueryObj[key as keyof Omit<ListQuery, "filter">]}`
+        `${key}=${filteredQueryObj[key as keyof Omit<ListQuery, "filter" | "search" | "search_fields">]}`
     )
     .join("&");
-  return `?${filterString}&${remainingString}`;
+  return `?${searchString}&${filterString}&${remainingString}`;
 };
