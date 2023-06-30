@@ -21,7 +21,7 @@ const BookList = () => {
       const queryObj: ListQuery = {
         search: state.book.search,
         search_fields: state.book.search_fields,
-        filter: {},
+        filter: state.book.filter,
         ordering: "",
         page: 1,
         page_size: 20,
@@ -29,7 +29,7 @@ const BookList = () => {
       const bookList = await fetchBooks(queryObj);
       setBooks(pickDataOrDefault(bookList, "results", []));
     })();
-  }, [state.book.search, state.book.search_fields]);
+  }, [state.book.search, state.book.search_fields, state.book.filter]);
 
   return (
     <div className="book-list">
