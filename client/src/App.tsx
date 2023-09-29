@@ -1,8 +1,10 @@
+import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
-import "./App.scss";
+
+import { createContext, useReducer } from "react";
 import Routers from "src/components/Routers";
 import { AppState, appReducer, initialState } from "src/reducer";
-import { createContext, useReducer } from "react";
+import "./App.scss";
 import { AppActions } from "./actions";
 
 const getInitialState = (): AppState => {
@@ -26,15 +28,17 @@ function App() {
   const [state, dispatch] = useReducer(appReducer, getInitialState());
 
   return (
-    <DispatchContext.Provider value={{ dispatch }}>
-      <StateContext.Provider value={{ state }}>
-        <div className="App">
-          <BrowserRouter>
-            <Routers />
-          </BrowserRouter>
-        </div>
-      </StateContext.Provider>
-    </DispatchContext.Provider>
+    <ChakraProvider>
+      <DispatchContext.Provider value={{ dispatch }}>
+        <StateContext.Provider value={{ state }}>
+          <div className="App">
+            <BrowserRouter>
+              <Routers />
+            </BrowserRouter>
+          </div>
+        </StateContext.Provider>
+      </DispatchContext.Provider>
+    </ChakraProvider>
   );
 }
 
