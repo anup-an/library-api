@@ -14,8 +14,9 @@ import { DispatchContext, StateContext } from "src/App";
 import { AUTHENTICATE } from "src/actions/authenticate";
 import { loginUser } from "src/api/user";
 import "src/components/Login/Login.scss";
-import { isSuccess } from "src/types/ApiTypes";
+import { applyApiEffect } from "src/types/ApiTypes";
 import { authenticated } from "src/types/authenticate";
+import { ApiError } from "src/api/axios";
 
 interface LoginCredentials {
   username: string;
@@ -38,11 +39,17 @@ const Login = () => {
     event.preventDefault();
     setLoading(true);
     const response = await loginUser(credentials);
-    if (isSuccess(response)) {
-      dispatch({ type: AUTHENTICATE, payload: authenticated });
-      localStorage.setItem("authStatus", JSON.stringify(authenticated));
-      history("/");
-    }
+    applyApiEffect(
+      response,
+      (data) => { 
+        dispatch({ type: AUTHENTICATE, payload: authenticated });
+        localStorage.setItem("authStatus", JSON.stringify(authenticated));
+        setLoading(false);
+      },
+      (error: ApiError) => {
+        setLoading(false);
+      }
+    )
   };
 
   const handleInputChange = (
