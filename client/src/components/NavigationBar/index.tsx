@@ -9,6 +9,7 @@ const NavigationBar = () => {
         w="100%"
         p={4}
         color="white"
+        fontWeight="bold"
         display="flex"
         flexFlow="row"
         justifyContent="space-between"
