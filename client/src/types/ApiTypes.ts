@@ -41,4 +41,21 @@ export const isFailure = <T, E>(data: ApiData<T, E>): boolean => data.type === '
 
 export const extractDataOrNull = <T, E>(data: ApiData<T, E>) => isSuccess(data) ? (data as Success<T>).data : null
 
+export const extractErrorOrNull = <D, E>(data: ApiData<D, E>) =>
+  isFailure(data) ? (data as Failure<E>).error : null;
+
 export const pickDataOrDefault = <T, E, K>(data: ApiData<T, E>, prop: keyof T, defaultValue: K): K => isSuccess(data) ? (_.get((data as Success<T>).data, prop)) : defaultValue
+
+export const applyApiEffect = <T, E>(
+  reponseData: ApiData<T, E>,
+  onSuccess: (data: T) => void,
+  onError: (error: E) => void
+) => {
+  if (isSuccess(reponseData)) {
+    const data = extractDataOrNull(reponseData);
+    if (data) onSuccess(data);
+  } else {
+    const error = extractErrorOrNull(reponseData);
+    if (error) onError(error);
+  }
+};
