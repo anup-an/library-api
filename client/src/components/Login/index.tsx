@@ -1,17 +1,40 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Box,
+  Spinner,
+  Text,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 
-import { DispatchContext } from "src/App";
+import { DispatchContext, StateContext } from "src/App";
 import { AUTHENTICATE } from "src/actions/authenticate";
 import { loginUser } from "src/api/user";
 import "src/components/Login/Login.scss";
-import Button from "src/components/ui/Button";
-import { isSuccess } from "src/types/ApiTypes";
+import { applyApiEffect } from "src/types/ApiTypes";
 import { authenticated } from "src/types/authenticate";
+import { ApiError, getErrorMessage } from "src/api/axios";
+
+interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+const MARGIN = 4;
 
 const Login = () => {
   const history = useNavigate();
   const { dispatch } = useContext(DispatchContext);
+  const { state } = useContext(StateContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -19,43 +42,95 @@ const Login = () => {
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
+    setErrorMessage(null)
     const response = await loginUser(credentials);
-    if (isSuccess(response)) {
-      dispatch({ type: AUTHENTICATE, payload: authenticated });
-      localStorage.setItem('authStatus', JSON.stringify(authenticated))
+    applyApiEffect(
+      response,
+      (data) => { 
+        dispatch({ type: AUTHENTICATE, payload: authenticated });
+        localStorage.setItem("authStatus", JSON.stringify(authenticated));
+        setLoading(false);
+      },
+      (error: ApiError) => {
+        setLoading(false);
+        setErrorMessage(getErrorMessage(error))
+      }
+    )
+  };
+
+  const handleInputChange = (
+    name: keyof LoginCredentials,
+    value: LoginCredentials[typeof name]
+  ) => {
+    setCredentials({ ...credentials, [name]: value });
+  };
+
+  useEffect(() => {
+    if (state.authStatus === authenticated) {
       history("/");
     }
-  };
+  });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({ ...credentials, [event.target.name]: event.target.value });
-  };
+  if (state.authStatus === authenticated) {
+    return (
+      <Box>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+        <Text fontSize="md">Redirecting to homepage</Text>
+      </Box>
+    );
+  }
 
   return (
-    <div>
+    <>
       <form onSubmit={handleLogin}>
-        <label htmlFor="username">
-          <input
-            id="username"
+        {errorMessage && !loading ? (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>Login failed!</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        ) : (
+          ""
+        )}
+        <FormControl isRequired marginTop={MARGIN}>
+          <FormLabel>E-mail</FormLabel>
+          <Input
             name="username"
-            placeholder="Type your e-mail"
-            required
-            onChange={handleChange}
+            value={credentials.username}
+            onChange={(e) => handleInputChange("username", e.target.value)}
+            type="email"
+            placeholder="example@example.com"
           />
-        </label>
-        <label htmlFor="password">
-          <input
-            id="password"
+        </FormControl>
+        <FormControl isRequired marginTop={MARGIN}>
+          <FormLabel>Password</FormLabel>
+          <Input
             name="password"
-            placeholder="Type your password"
+            value={credentials.password}
+            onChange={(e) => handleInputChange("password", e.target.value)}
             type="password"
-            required
-            onChange={handleChange}
+            placeholder="Type your password here"
           />
-        </label>
-        <Button buttonText="Login" type="submit" />
+        </FormControl>
+        <Button
+          colorScheme="purple"
+          variant="outline"
+          type="submit"
+          marginTop={MARGIN}
+          isLoading={loading}
+          loadingText="Signing in"
+        >
+          Login
+        </Button>
       </form>
-    </div>
+    </>
   );
 };
 

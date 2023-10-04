@@ -1,3 +1,4 @@
+import _ from "lodash";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ApiData, failure, success } from "src/types/ApiTypes";
 import { StructError, assert } from "superstruct";
@@ -15,14 +16,10 @@ axios.interceptors.response.use(
 
 export class ApiError {
   public title: string;
-  public description: string | object[];
+  public description: any;
   public statusCode?: number;
 
-  constructor(
-    title: string,
-    description: string | object[],
-    statusCode?: number
-  ) {
+  constructor(title: string, description: any, statusCode?: number) {
     if (statusCode) {
       this.statusCode = statusCode;
     }
@@ -42,10 +39,22 @@ export const parseError = <T>(error: any): ApiData<T, ApiError> => {
     } field`;
   } else {
     title = error.response?.data.title || "UnknownError";
-    description = error.response?.data.description || "Something went wrong";
+    description =
+      error.response?.data.description ||
+      "Something went wrong. Please try again";
     status = error.response?.status;
   }
   return failure(new ApiError(title, description, status));
+};
+
+export const getErrorMessage = (error: ApiError) => {
+  const handledErrors = ["invalid", "authentication_failed"];
+  const message = _.isString(error.description)
+    ? error.description
+    : _.values(error.description).flat(1)[0];
+  return _.isString(message) && handledErrors.includes(error.title)
+    ? message
+    : "Something went wrong. Please try again";
 };
 
 const makeRequest = async <T, E>(

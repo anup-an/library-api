@@ -1,10 +1,13 @@
+import { Box, Heading } from "@chakra-ui/react";
+
 import Login from "src/components/Login";
 
 const LoginPage = () => {
   return (
-    <div>
+    <Box padding={4}>
+      <Heading mb="10">Login</Heading>
       <Login />
-    </div>
+    </Box>
   );
 };
 
