@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from django.contrib.auth import get_user_model, authenticate
 from book.serializers import BookInstanceSerializer
 from user.models import User
@@ -40,5 +40,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
         user = authenticate(
             username=data['username'], password=data['password'])
         if not user:
-            raise serializers.ValidationError('User not found')
+            raise exceptions.AuthenticationFailed(
+                detail='Incorrect email or password')
         return user
