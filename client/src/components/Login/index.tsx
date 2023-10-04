@@ -8,6 +8,10 @@ import {
   Box,
   Spinner,
   Text,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
 
 import { DispatchContext, StateContext } from "src/App";
@@ -16,7 +20,7 @@ import { loginUser } from "src/api/user";
 import "src/components/Login/Login.scss";
 import { applyApiEffect } from "src/types/ApiTypes";
 import { authenticated } from "src/types/authenticate";
-import { ApiError } from "src/api/axios";
+import { ApiError, getErrorMessage } from "src/api/axios";
 
 interface LoginCredentials {
   username: string;
@@ -30,6 +34,7 @@ const Login = () => {
   const { dispatch } = useContext(DispatchContext);
   const { state } = useContext(StateContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -38,6 +43,7 @@ const Login = () => {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+    setErrorMessage(null)
     const response = await loginUser(credentials);
     applyApiEffect(
       response,
@@ -48,6 +54,7 @@ const Login = () => {
       },
       (error: ApiError) => {
         setLoading(false);
+        setErrorMessage(getErrorMessage(error))
       }
     )
   };
@@ -83,6 +90,15 @@ const Login = () => {
   return (
     <>
       <form onSubmit={handleLogin}>
+        {errorMessage && !loading ? (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>Login failed!</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        ) : (
+          ""
+        )}
         <FormControl isRequired marginTop={MARGIN}>
           <FormLabel>E-mail</FormLabel>
           <Input
