@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
+import { useContext } from "react";
+import { StateContext } from "src/App";
+import { authenticated } from "src/types/authenticate";
 
 const NavigationBar = () => {
+  const { state } = useContext(StateContext);
   return (
     <>
       <Box
@@ -21,12 +25,18 @@ const NavigationBar = () => {
           <Box w="100px" h="100%">
             <NavLink to="/books">Browse</NavLink>
           </Box>
-          <Box w="100px" h="100%">
-            <NavLink to="/login">Login</NavLink>
-          </Box>
-          <Box w="100px" h="100%">
-            <NavLink to="/register">Register</NavLink>
-          </Box>
+          {state.authStatus !== authenticated ? (
+            <>
+              <Box w="100px" h="100%">
+                <NavLink to="/login">Login</NavLink>
+              </Box>
+              <Box w="100px" h="100%">
+                <NavLink to="/register">Register</NavLink>
+              </Box>
+            </>
+          ) : (
+            ""
+          )}
         </Box>
       </Box>
     </>
