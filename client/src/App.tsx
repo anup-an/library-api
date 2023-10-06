@@ -1,14 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import {
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import { createContext, useReducer } from "react";
 import { AppState, appReducer, initialState } from "src/reducer";
 import "./App.scss";
 import { AppActions } from "./actions";
-import { authenticated } from "./types/authenticate";
+import { authenticated, isAuthenticated } from "./types/authenticate";
 import BookListPage from "./views/BookListPage";
 import LoginPage from "./views/LoginPage";
 import RegisterPage from "./views/RegisterPage";
@@ -18,7 +15,9 @@ import RootLayout from "./views/RootLayout";
 
 const getInitialState = (): AppState => {
   const auth = localStorage.getItem("authStatus");
-  return auth ? { ...initialState, authStatus: authenticated } : initialState;
+  return auth && isAuthenticated(JSON.parse(auth))
+    ? { ...initialState, authStatus: authenticated }
+    : initialState;
 };
 
 export const StateContext = createContext<{ state: AppState }>({
