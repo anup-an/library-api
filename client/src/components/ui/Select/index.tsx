@@ -1,3 +1,4 @@
+import { Select } from "@chakra-ui/react";
 import "./Select.scss";
 
 export interface Option {
@@ -14,33 +15,31 @@ export interface SelectOption {
 
 interface IProps {
   selectConfig: SelectOption;
-  handleSelect: (selectedOption: {optionKey: string, value: any}) => void;
+  handleSelect: (selectedOption: { optionKey: string; value: any }) => void;
 }
 
-const Select = (props: IProps) => {
+const Dropdown = (props: IProps) => {
   const { selectConfig, handleSelect } = props;
 
   const selectOption = (event: any) => {
-    event.preventDefault()
+    event.preventDefault();
     handleSelect({
-          optionKey: selectConfig.value,
-          value: event.target.value
-        })
-  }
+      optionKey: selectConfig.value,
+      value: event.target.value,
+    });
+  };
   return (
     <div className="select">
-      <select
-        onChange={selectOption}
-        name={selectConfig.name}
-      >
+      <Select onChange={selectOption} name={selectConfig.name} borderColor="black">
+        <option value="" selected disabled hidden>Select an option</option>
         {selectConfig.options.map((option) => (
           <option value={JSON.stringify(option.value)} key={option.name}>
             {option.name}
           </option>
         ))}
-      </select>
+      </Select>
     </div>
   );
 };
 
-export default Select;
+export default Dropdown;

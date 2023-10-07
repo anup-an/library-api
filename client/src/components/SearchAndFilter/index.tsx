@@ -4,6 +4,7 @@ import { SEARCH_BOOKS } from "src/actions/book";
 import { Option, SelectOption } from "src/components/ui/Select";
 import "./SearchAndFilter.scss";
 import Select from "src/components/ui/Select";
+import { Checkbox, FormControl, Input, Stack } from "@chakra-ui/react";
 
 interface IProps {
   selectOptions: SelectOption[];
@@ -47,40 +48,39 @@ const SearchAndFilter = (props: IProps) => {
   return (
     <form onSubmit={handleSubmit} className="search-filter">
       <div className="search-filter__search">
-        <label htmlFor="search">
-          <input
-            id="search"
-            name="search"
-            placeholder="Search"
-            onChange={onSearchInputChange}
-            className="search-input"
-          />
-        </label>
         <div className="search-fields">
-          <div>
-            <input
+          <Stack spacing={5} direction="row">
+            <Checkbox
               value="title"
-              type="checkbox"
               defaultChecked={searchFields.includes("title")}
               onChange={handleSearchCheckboxChange}
-            />
-            <span>Title</span>
-          </div>
-          <div>
-            <input
+            >
+              Title
+            </Checkbox>
+            <Checkbox
               value="series"
-              type="checkbox"
               defaultChecked={searchFields.includes("series")}
               onChange={handleSearchCheckboxChange}
-            />
-            <span>Series</span>
-          </div>
+            >
+              Series
+            </Checkbox>
+          </Stack>
         </div>
+        <FormControl>
+          <Input
+            id="search"
+            name="search"
+            borderColor="black"
+            onChange={onSearchInputChange}
+            placeholder="Search"
+            minWidth={300}
+          />
+        </FormControl>
       </div>
       <div className="search-filter__filter">
         {selectOptions.map((option) => (
           <div key={option.name} className="option">
-            <span>{option.name}</span>
+            <div className="title">{option.name}</div>
             <Select selectConfig={option} handleSelect={handleSelect} />
           </div>
         ))}

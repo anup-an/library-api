@@ -35,6 +35,7 @@ const NavigationBar = () => {
         height="60px"
         color="white"
         fontWeight="bold"
+        fontSize={16}
         display="flex"
         flexFlow="row"
         justifyContent="space-between"
