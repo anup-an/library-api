@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DispatchContext } from "src/App";
+import _ from "lodash";
 import { SEARCH_BOOKS } from "src/actions/book";
 import { Option, SelectOption } from "src/components/ui/Select";
 import "./SearchAndFilter.scss";
@@ -19,12 +20,15 @@ const SearchAndFilter = (props: IProps) => {
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event?.preventDefault();
-    setSearch(event.target.value);
+    debouncedSearch(event.target.value);
   };
+
+  const debouncedSearch = _.debounce((search: string) => {
+    setSearch(search);
+  }, 300);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(filter);
     dispatch({
       type: SEARCH_BOOKS,
       payload: { search: search, search_fields: searchFields, filter: filter },
@@ -44,6 +48,13 @@ const SearchAndFilter = (props: IProps) => {
   const handleSelect = (option: { optionKey: string; value: any }) => {
     setFilter({ ...filter, [option.optionKey]: JSON.parse(option.value) });
   };
+
+  useEffect(() => {
+    dispatch({
+      type: SEARCH_BOOKS,
+      payload: { search: search, search_fields: searchFields, filter: filter },
+    });
+  }, [search, searchFields, filter]);
 
   return (
     <form onSubmit={handleSubmit} className="search-filter">
