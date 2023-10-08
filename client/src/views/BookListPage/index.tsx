@@ -13,7 +13,7 @@ const selectOptions: SelectOption[] = [
       { name: "German", value: { name: "German" } },
       { name: "French", value: { name: "French" } },
       { name: "Persian", value: { name: "Persian" } },
-      { name: "Arabic", value: { name: "Arabic" } }
+      { name: "Arabic", value: { name: "Arabic" } },
     ],
   },
   {
@@ -32,10 +32,12 @@ const selectOptions: SelectOption[] = [
 const BookListPage = () => {
   return (
     <div className="booklist-page">
-      <div>
+      <div className="booklist-page__search">
         <SearchAndFilter selectOptions={selectOptions} />
       </div>
-      <BookList />
+      <div className="booklist-page__list">
+        <BookList />
+      </div>
     </div>
   );
 };
