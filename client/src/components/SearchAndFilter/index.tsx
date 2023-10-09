@@ -59,6 +59,16 @@ const SearchAndFilter = (props: IProps) => {
   return (
     <form onSubmit={handleSubmit} className="search-filter">
       <div className="search-filter__search">
+        <FormControl>
+          <Input
+            id="search"
+            name="search"
+            borderColor="black"
+            onChange={onSearchInputChange}
+            placeholder="Search"
+            minWidth={300}
+          />
+        </FormControl>
         <div className="search-fields">
           <Stack spacing={5} direction="row">
             <Checkbox
@@ -77,21 +87,10 @@ const SearchAndFilter = (props: IProps) => {
             </Checkbox>
           </Stack>
         </div>
-        <FormControl>
-          <Input
-            id="search"
-            name="search"
-            borderColor="black"
-            onChange={onSearchInputChange}
-            placeholder="Search"
-            minWidth={300}
-          />
-        </FormControl>
       </div>
       <div className="search-filter__filter">
         {selectOptions.map((option) => (
           <div key={option.name} className="option">
-            <div className="title">{option.name}</div>
             <Select selectConfig={option} handleSelect={handleSelect} />
           </div>
         ))}

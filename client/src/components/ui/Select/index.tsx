@@ -30,8 +30,8 @@ const Dropdown = (props: IProps) => {
   };
   return (
     <div className="select">
-      <Select onChange={selectOption} name={selectConfig.name} borderColor="black">
-        <option value="" selected disabled hidden>Select an option</option>
+      <Select onChange={selectOption} borderColor="black">
+        <option value="" selected disabled hidden>{selectConfig.name}</option>
         {selectConfig.options.map((option) => (
           <option value={JSON.stringify(option.value)} key={option.name}>
             {option.name}
