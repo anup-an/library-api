@@ -30,7 +30,7 @@ class UserView(viewsets.ModelViewSet):
             book.save()
             user = User.objects.get(id=request.user.id)
             user.books_onloan.add(book)
-            return Response(status=status.HTTP_200_OK)
+            return Response('Book borrowed successfully', status=status.HTTP_200_OK)
 
     def return_book(self, request):
         id = request.data.get('id')
@@ -42,7 +42,7 @@ class UserView(viewsets.ModelViewSet):
             book.save()
             user = User.objects.get(id=request.user.id)
             user.books_onloan.delete(book)
-            return Response(status=status.HTTP_200_OK)
+            return Response('Book returned successfully', status=status.HTTP_200_OK)
 
 
 class UserRegistration(APIView):
@@ -69,4 +69,4 @@ class UserLogin(APIView):
 class UserLogout(APIView):
     def post(self, request):
         logout(request)
-        return Response(status=status.HTTP_200_OK)
+        return Response('You have successfully logged out of your account', status=status.HTTP_200_OK)
