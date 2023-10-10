@@ -14,6 +14,9 @@ axios.interceptors.response.use(
   }
 );
 
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfCookieName = "csrftoken";
+
 export class ApiError {
   public title: string;
   public description: any;

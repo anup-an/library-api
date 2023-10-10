@@ -1,3 +1,14 @@
 .booklist-page {
-    padding : 40px;
+  &__search {
+    position: fixed;
+    margin-top: 60px;
+    z-index: 20;
+    background: white;
+    width:100%;
+  }
+  &__list {
+    margin-top: 140px;
+    z-index: 0;
+    position: absolute; 
+  }
 }

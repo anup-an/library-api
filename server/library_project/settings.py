@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['backend']
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -38,6 +38,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost']
+
+CSRF_COOKIE_NAME = "csrftoken"
 
 
 # Application definition

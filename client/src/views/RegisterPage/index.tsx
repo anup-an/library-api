@@ -1,10 +1,12 @@
+import { Box, Heading } from "@chakra-ui/react";
 import Register from "src/components/Register";
 
 const RegisterPage = () => {
   return (
-    <div>
+    <Box padding={4}>
+      <Heading mb="10">Register</Heading>
       <Register />
-    </div>
+    </Box>
   );
 };
 
