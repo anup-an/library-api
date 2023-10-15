@@ -26,7 +26,7 @@ const BookCard = (props: IProps) => {
 
   return (
     <>
-      <Card>
+      <Card boxShadow="xl" borderRadius="5px">
         <CardBody maxW="sm">
           <Box display="flex" justifyContent="center" onClick={openDetails}>
             <Image
