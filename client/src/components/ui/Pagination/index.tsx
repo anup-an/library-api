@@ -41,7 +41,7 @@ const Pagination = (props: IProps) => {
         aria-label="Done"
         fontSize="20px"
         icon={<ChevronLeftIcon />}
-        display={currentPage === 1 ? "hidden": "visible"}
+        isDisabled={currentPage === 1}
         onClick={(e) => handlePageChange(currentPage - 1)}
       />
       {_.range(1, total_pages + 1, 1).map((num) => (
@@ -78,7 +78,7 @@ const Pagination = (props: IProps) => {
         aria-label="Done"
         fontSize="20px"
         icon={<ChevronRightIcon />}
-        display={currentPage === total_pages ? "hidden": "visible"}
+        isDisabled={currentPage === total_pages}
         onClick={(e) => handlePageChange(currentPage + 1)}
       />
     </HStack>
