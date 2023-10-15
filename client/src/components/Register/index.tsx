@@ -1,9 +1,15 @@
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+} from "@chakra-ui/alert";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ApiError } from "src/api/axios";
+import { ApiError, getErrorMessage } from "src/api/axios";
 import { registerUser } from "src/api/user";
 import { applyApiEffect, isSuccess } from "src/types/ApiTypes";
 
@@ -21,10 +27,13 @@ const Register = () => {
     password: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     setLoading(true);
+    setErrorMessage(null);
+
     const response = await registerUser(registerDetails);
     applyApiEffect(
       response,
@@ -34,6 +43,7 @@ const Register = () => {
       },
       (error: ApiError) => {
         setLoading(false);
+        setErrorMessage(getErrorMessage(error));
       }
     );
 
@@ -54,6 +64,15 @@ const Register = () => {
   return (
     <div>
       <form onSubmit={handleRegister}>
+        {errorMessage && !loading ? (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>Sign up failed!</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        ) : (
+          ""
+        )}
         <FormControl isRequired marginTop={MARGIN}>
           <FormLabel>E-mail</FormLabel>
           <Input
