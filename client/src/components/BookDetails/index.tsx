@@ -1,13 +1,26 @@
+import { Box, Text } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ApiError } from "src/api/axios";
 import { fetchBookDetails } from "src/api/book";
 import { borrowBook } from "src/api/user";
-import { Nullable, extractDataOrNull, isSuccess } from "src/types/ApiTypes";
+import {
+  ApiData,
+  Nullable,
+  applyApiEffect,
+  isFailure,
+  isLoading,
+  isSuccess,
+  loading,
+} from "src/types/ApiTypes";
 import { Book } from "src/types/book";
+import Loader from "src/components/ui/Loader";
+import ErrorFetch from "src/components/ui/ErrorFetch";
 
 const BookDetails = () => {
   const { id } = useParams();
   const [book, setBook] = useState<Nullable<Book>>(null);
+  const [bookFetch, setBookFetch] = useState<ApiData<Book, ApiError>>(loading);
 
   const handleBorrow = async (id: number) => {
     const response = await borrowBook(id);
@@ -16,27 +29,67 @@ const BookDetails = () => {
     }
   };
 
+  const handleBookFetch = async (id: string) => {
+    const bookResponse = await fetchBookDetails(id);
+    setBookFetch(bookResponse);
+    applyApiEffect(
+      bookResponse,
+      (data: Book) => {
+        setBook(data);
+      },
+      (error) => {}
+    );
+  };
+
+  const retryFetch = async () => {
+    if (id) {
+      setBookFetch(loading);
+      await handleBookFetch(id);
+    }
+  };
+
   useEffect(() => {
     (async () => {
-      const bookDetails = id
-        ? extractDataOrNull(await fetchBookDetails(id))
-        : null;
-      setBook(bookDetails);
+      if (id) {
+        await handleBookFetch(id);
+      }
     })();
   }, [id]);
 
+  if (isLoading(bookFetch)) {
+    return (
+      <Box marginTop={85}>
+        <Loader displayText="Loading book! Please wait ..." />
+      </Box>
+    );
+  }
+
+  if (isFailure(bookFetch) || !book) {
+    return (
+      <Box marginTop={85}>
+        <ErrorFetch
+          displayText="Error loading book. Please try again."
+          handleRetry={retryFetch}
+        />
+      </Box>
+    );
+  }
+
   return (
     <div>
-      {book ? (
+      <div>
+        <img alt={book.title} src={book.book_image || ""} />
         <div>
-          <img alt={book.title} src={book.book_image || ""} />
           <div>{book.title}</div>
-          <div>{book.description}</div>
-          <button onClick={() => handleBorrow(book.id)}>Borrow</button>
+          <div>
+            {book.author.map((author) => (
+              <div>{author.name}</div>
+            ))}
+          </div>
         </div>
-      ) : (
-        <div>Not Found</div>
-      )}
+      </div>
+      <div>{book.description}</div>
+      <button onClick={() => handleBorrow(book.id)}>Borrow</button>
     </div>
   );
 };
