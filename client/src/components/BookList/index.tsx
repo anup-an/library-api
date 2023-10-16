@@ -1,13 +1,24 @@
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 
 import { StateContext } from "src/App";
+import { ApiError } from "src/api/axios";
 import { fetchBooks } from "src/api/book";
+import ErrorFetch from "src/components/ui/ErrorFetch";
+import Loader from "src/components/ui/Loader";
 import Pagination from "src/components/ui/Pagination";
 import { PaginationConfig } from "src/components/ui/Pagination/Types";
-import { pickDataOrDefault } from "src/types/ApiTypes";
+import {
+  ApiData,
+  applyApiEffect,
+  isFailure,
+  isLoading,
+  isSuccess,
+  loading,
+  pickDataOrDefault,
+} from "src/types/ApiTypes";
 import { Book } from "src/types/book";
-import { ListQuery } from "src/types/common";
+import { CollectionPayload, ListQuery } from "src/types/common";
 import BookCard from "./BookCard";
 import "./BookList.scss";
 
@@ -25,6 +36,8 @@ const BookList = () => {
   const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>(
     INITIAL_PAGINATION_CONFIG
   );
+  const [booksFetch, setBooksFetch] =
+    useState<ApiData<CollectionPayload<Book>, ApiError>>(loading);
   const { state } = useContext(StateContext);
 
   const handlePageChange = (pageNum: number) => {
@@ -32,35 +45,91 @@ const BookList = () => {
     setPaginationConfig({ ...paginationConfig, currentPage: pageNum });
   };
 
+  const handleFetchBooks = async () => {
+    const queryObj: ListQuery = {
+      search: state.book.search,
+      search_fields: state.book.search_fields,
+      filter: state.book.filter,
+      ordering: "",
+      page: currentPage,
+      page_size: paginationConfig.pageSize,
+    };
+    const response = await fetchBooks(queryObj);
+    setBooksFetch(response);
+    applyApiEffect(
+      response,
+      (data) => {
+        setBooks(pickDataOrDefault(response, "results", []));
+        setPaginationConfig((config) => ({
+          ...config,
+          count: pickDataOrDefault(response, "count", 0),
+        }));
+      },
+      () => {}
+    );
+  };
+
+  const retryFetch = async () => {
+    setBooksFetch(loading);
+    await handleFetchBooks();
+  };
+
   useEffect(() => {
     (async () => {
-      const queryObj: ListQuery = {
-        search: state.book.search,
-        search_fields: state.book.search_fields,
-        filter: state.book.filter,
-        ordering: "",
-        page: currentPage,
-        page_size: paginationConfig.pageSize,
-      };
-      const bookList = await fetchBooks(queryObj);
-      setBooks(pickDataOrDefault(bookList, "results", []));
-      setPaginationConfig(config => ({
-        ...config,
-        count: pickDataOrDefault(bookList, "count", 0),
-      }));
+      await handleFetchBooks();
     })();
   }, [
     state.book.search,
     state.book.search_fields,
     state.book.filter,
     paginationConfig.pageSize,
-    currentPage
+    currentPage,
   ]);
+
+  if (isLoading(booksFetch)) {
+    return (
+      <Box marginTop={85}>
+        <Loader displayText="Searching for books! Please wait ..." />
+      </Box>
+    );
+  }
+
+  if (isFailure(booksFetch)) {
+    return (
+      <Box marginTop={85}>
+        <ErrorFetch
+          displayText="Could not load books. Please try again."
+          handleRetry={retryFetch}
+        />
+      </Box>
+    );
+  }
+
+  if (isSuccess(booksFetch) && books.length === 0) {
+    return (
+      <Box
+        width="100vw"
+        minHeight={300}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        marginTop={85}
+      >
+        <Text fontSize="lg" fontWeight="bold">
+          No books found based on search and filter criteria.
+        </Text>
+      </Box>
+    );
+  }
 
   return (
     <div className="book-list">
       {paginationConfig.count ? (
-        <Box display="flex" justifyContent="flex-end" className="book-list__pagination">
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          className="book-list__pagination"
+        >
           <Pagination
             paginationConfig={paginationConfig}
             handlePageChange={handlePageChange}

@@ -12,6 +12,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Card,
 } from "@chakra-ui/react";
 
 import { DispatchContext, StateContext } from "src/App";
@@ -106,6 +107,7 @@ const Login = () => {
             value={credentials.username}
             onChange={(e) => handleInputChange("username", e.target.value)}
             type="email"
+            borderColor="black"
             placeholder="example@example.com"
           />
         </FormControl>
@@ -117,11 +119,12 @@ const Login = () => {
             onChange={(e) => handleInputChange("password", e.target.value)}
             type="password"
             placeholder="Type your password here"
+            borderColor="black"
           />
         </FormControl>
         <Button
-          colorScheme="purple"
-          variant="outline"
+          colorScheme="teal"
+          variant="solid"
           type="submit"
           marginTop={MARGIN}
           isLoading={loading}
