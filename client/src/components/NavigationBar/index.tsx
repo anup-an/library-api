@@ -1,31 +1,42 @@
-import { NavLink } from "react-router-dom";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import _ from "lodash";
+import { NavLink, useLocation } from "react-router-dom";
+import { Box, Button, Divider, Flex } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DispatchContext, StateContext } from "src/App";
 import { authenticated, unauthenticated } from "src/types/authenticate";
 import { logoutUser } from "src/api/user";
 import { applyApiEffect } from "src/types/ApiTypes";
 import { AUTHENTICATE } from "src/actions/authenticate";
+import "./NavigationBar.scss";
 
 const NavigationBar = () => {
   const { state } = useContext(StateContext);
   const { dispatch } = useContext(DispatchContext);
-  const [isloggingOut, setIsLoggingOut]  = useState<boolean>(false)
+  const location = useLocation();
+  const [isloggingOut, setIsLoggingOut] = useState<boolean>(false);
+
   const logOut = async () => {
-    setIsLoggingOut(true)
-    const response = await logoutUser()
+    setIsLoggingOut(true);
+    const response = await logoutUser();
     applyApiEffect(
       response,
-      (data) => { 
+      (data) => {
         dispatch({ type: AUTHENTICATE, payload: unauthenticated });
         localStorage.setItem("authStatus", JSON.stringify(unauthenticated));
-        setIsLoggingOut(false)
+        setIsLoggingOut(false);
       },
       (error) => {
-        setIsLoggingOut(false)
+        setIsLoggingOut(false);
       }
-    )
-  }
+    );
+  };
+
+  const isSelected = (navItem: string) => {
+    if (navItem === "/") {
+      return location.pathname === navItem;
+    }
+    return location.pathname.includes(navItem);
+  };
   return (
     <>
       <Box
@@ -41,20 +52,46 @@ const NavigationBar = () => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Box w="100px" h="100%">
+        <Box
+          padding="5px"
+          className={`${isSelected("/") ? "nav-select" : ""}`}
+          _hover={{
+            color: "teal",
+          }}
+        >
           <NavLink to="/">Home</NavLink>
         </Box>
         <Box display="flex" flexFlow="row" alignItems="center">
-          <Box w="100px" h="100%">
-            <NavLink to="/books">Browse</NavLink>
+          <Box
+            padding="5px"
+            className={`${isSelected("books") ? "nav-select" : ""}`}
+            _hover={{
+              color: "teal",
+            }}
+          >
+            <NavLink to="/books">Books</NavLink>
           </Box>
           {state.authStatus !== authenticated ? (
             <>
-              <Box w="100px" h="100%">
+              <Box
+                padding="5px"
+                marginLeft="30px"
+                className={`${isSelected("login") ? "nav-select" : ""}`}
+                _hover={{
+                  color: "teal",
+                }}
+              >
                 <NavLink to="/login">Login</NavLink>
               </Box>
-              <Box w="100px" h="100%">
-                <NavLink to="/register">Register</NavLink>
+              <Box
+                padding="5px"
+                marginLeft="40px"
+                className={`${isSelected("register") ? "nav-select" : ""}`}
+                _hover={{
+                  color: "teal",
+                }}
+              >
+                <NavLink to="/register">Signup</NavLink>
               </Box>
             </>
           ) : (
@@ -62,13 +99,21 @@ const NavigationBar = () => {
           )}
           {state.authStatus === authenticated ? (
             <>
-              <Box w="100px" h="100%">
+              <Box h="100%">
                 <Button
-                  colorScheme="purple"
+                  colorScheme="white"
+                  padding="5px"
+                  height="34px"
+                  color="white"
                   variant="outline"
                   onClick={logOut}
+                  border="none"
                   isLoading={isloggingOut}
-                  loadingText="Logging out"
+                  marginLeft="40px"
+                  background={isloggingOut ? "white" : "orange"}
+                  _hover={{
+                    color: "teal",
+                  }}
                 >
                   Logout
                 </Button>
@@ -77,7 +122,7 @@ const NavigationBar = () => {
           ) : (
             ""
           )}
-          </Box>
+        </Box>
       </Box>
     </>
   );
