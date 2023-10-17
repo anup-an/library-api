@@ -27,7 +27,7 @@ export interface Book {
   book_image: Nullable<string>;
   book_format: Nullable<BookFormat>;
   genres: Genre[];
-  language: Language[];
+  language: Language;
 }
 
 export interface BookInstance {
