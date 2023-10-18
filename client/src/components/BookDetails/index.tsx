@@ -58,7 +58,9 @@ const BookDetails = () => {
   const handleBorrow = async (id: number) => {
     const response = await borrowBook(id);
     if (!isSuccess(response)) {
-      alert("Failed to borrow book");
+      alert(
+        "Failed to borrow book. Please make sure you are already logged in to perform this action"
+      );
     }
   };
 
@@ -134,7 +136,9 @@ const BookDetails = () => {
       <Heading fontSize="lg" marginTop="16px">
         Description
       </Heading>
-      <Box marginTop="12px" textAlign="justify">{book.description}</Box>
+      <Box marginTop="12px" textAlign="justify">
+        {book.description}
+      </Box>
     </Box>
   );
 };
