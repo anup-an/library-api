@@ -12,6 +12,7 @@ import RegisterPage from "./views/RegisterPage";
 import BookDetailsPage from "./views/BookDetailsPage";
 import UserPage from "./views/UserPage";
 import RootLayout from "./views/RootLayout";
+import LandingPage from "./views/LandingPage";
 
 const getInitialState = (): AppState => {
   const auth = localStorage.getItem("authStatus");
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <div>404</div>,
     children: [
+      {
+        path: "/",
+        element: <LandingPage />,
+      },
       {
         path: "/books",
         element: <BookListPage />,
