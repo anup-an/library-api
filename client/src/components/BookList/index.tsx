@@ -76,6 +76,7 @@ const BookList = () => {
 
   useEffect(() => {
     (async () => {
+      setBooksFetch(loading);
       await handleFetchBooks();
     })();
   }, [
@@ -89,6 +90,20 @@ const BookList = () => {
   if (isLoading(booksFetch)) {
     return (
       <Box marginTop={85}>
+        {paginationConfig.count ? (
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            className="book-list__pagination"
+          >
+            <Pagination
+              paginationConfig={paginationConfig}
+              handlePageChange={handlePageChange}
+            />
+          </Box>
+        ) : (
+          ""
+        )}
         <Loader displayText="Searching for books! Please wait ..." />
       </Box>
     );
@@ -97,6 +112,20 @@ const BookList = () => {
   if (isFailure(booksFetch)) {
     return (
       <Box marginTop={85}>
+        {paginationConfig.count ? (
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            className="book-list__pagination"
+          >
+            <Pagination
+              paginationConfig={paginationConfig}
+              handlePageChange={handlePageChange}
+            />
+          </Box>
+        ) : (
+          ""
+        )}
         <ErrorFetch
           displayText="Could not load books. Please try again."
           handleRetry={retryFetch}
