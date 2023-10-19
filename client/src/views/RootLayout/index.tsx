@@ -8,6 +8,13 @@ const RootLayout = () => {
       <Box position="fixed" width="100%" zIndex={20}>
         <NavigationBar />
       </Box>
+      <Box
+        position="fixed"
+        w="100vw"
+        h="100vh"
+        backgroundColor="gray.100"
+        zIndex="-1"
+      />
       <Outlet />
     </Box>
   );
