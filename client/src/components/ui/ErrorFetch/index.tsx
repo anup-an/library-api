@@ -1,4 +1,6 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Icon } from "@chakra-ui/icons";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { IoRefreshCircleSharp } from "react-icons/io5";
 
 interface IProps {
   displayText: string;
@@ -17,14 +19,14 @@ const ErrorFetch = (props: IProps) => {
       alignItems="center"
       textAlign="center"
     >
-      <Box>
-        <Button onClick={handleRetry} colorScheme="red">
-          Retry
-        </Button>
-        <Text fontSize="lg" fontWeight="bold">
+      <Flex>
+        <Text fontSize="lg" fontWeight="bold" marginRight={1}>
           {displayText}
         </Text>
-      </Box>
+        <button onClick={handleRetry}>
+          <Icon as={IoRefreshCircleSharp} color="red" boxSize="30px" />
+        </button>
+      </Flex>
     </Box>
   );
 };

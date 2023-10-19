@@ -138,7 +138,7 @@ const BookList = (props: IProps) => {
           ""
         )}
         <ErrorFetch
-          displayText="Could not load books. Please try again."
+          displayText="Could not load books. Please try again"
           handleRetry={retryFetch}
         />
       </Box>
