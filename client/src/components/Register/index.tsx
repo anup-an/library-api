@@ -73,8 +73,7 @@ const Register = () => {
         {errorMessage && !loading ? (
           <Alert status="error">
             <AlertIcon />
-            <AlertTitle>Sign up failed!</AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
+            <AlertDescription>Sign up failed! {errorMessage}</AlertDescription>
           </Alert>
         ) : (
           ""
