@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "react";
+import { TbSettingsSearch } from 'react-icons/tb'
+
 import { DispatchContext } from "src/App";
 import _ from "lodash";
 import {
@@ -7,6 +9,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Icon
 } from "@chakra-ui/react";
 
 import { SEARCH_BOOKS } from "src/actions/book";
@@ -98,11 +101,7 @@ const SearchAndFilter = (props: IProps) => {
                   className="options"
                   disabled={disabled}
                 >
-                  {isAdvancedSearch ? (
-                    <ChevronUpIcon color="black" />
-                  ) : (
-                    <ChevronDownIcon color="black" />
-                  )}
+                  <Icon as={TbSettingsSearch} color={disabled ? "gray.400" : "gray:800" } />
                 </button>
               }
             />
