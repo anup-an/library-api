@@ -1,13 +1,21 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Register from "src/components/Register";
+import TagLine from "src/components/ui/TagLine";
 
 const RegisterPage = () => {
   return (
-    <Box padding={4} width="50%">
-      <Heading mb="10" marginTop="60px" fontSize="30px">
-        Sign Up
-      </Heading>
-      <Register />
+    <Box
+      display="flex"
+      h="100vh"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Flex w="50%" justifyContent="center">
+        <TagLine />
+      </Flex>
+      <Flex w="50%" justifyContent="center">
+        <Register />
+      </Flex>
     </Box>
   );
 };

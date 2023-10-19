@@ -1,12 +1,22 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import Login from "src/components/Login";
+import TagLine from "src/components/ui/TagLine";
 
 const LoginPage = () => {
   return (
-    <Box padding={4} width="50%">
-      <Heading mb="10" fontSize="30px" marginTop="60px">Login</Heading>
-      <Login />
+    <Box
+      display="flex"
+      h="100vh"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Flex w="50%" justifyContent="center">
+        <TagLine />
+      </Flex>
+      <Flex w="50%" justifyContent="center">
+        <Login />
+      </Flex>
     </Box>
   );
 };

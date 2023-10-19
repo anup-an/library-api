@@ -7,6 +7,7 @@ import {
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
+import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ApiError, getErrorMessage } from "src/api/axios";
@@ -61,8 +62,13 @@ const Register = () => {
       [name]: value,
     });
   };
+
+  const redirectToLogin = () => {
+    history("/register");
+  };
+
   return (
-    <div>
+    <Box w="450px" boxShadow="2xl" p="20px" border="white" borderRadius="10px">
       <form onSubmit={handleRegister}>
         {errorMessage && !loading ? (
           <Alert status="error">
@@ -106,7 +112,19 @@ const Register = () => {
           Sign Up
         </Button>
       </form>
-    </div>
+      <Divider
+        marginTop="20px"
+        borderColor="teal"
+        w="100%"
+        marginBottom="10px"
+      />
+      <Text>Already have an account ?</Text>
+      <Flex justifyContent="center">
+        <Button colorScheme="teal" marginTop="10px" onClick={redirectToLogin}>
+          Sign in to your account
+        </Button>
+      </Flex>
+    </Box>
   );
 };
 

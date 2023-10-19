@@ -7,12 +7,13 @@ import {
   Input,
   Box,
   Spinner,
-  Text,
   Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  Card,
+  Divider,
+  Text,
+  Flex,
 } from "@chakra-ui/react";
 
 import { DispatchContext, StateContext } from "src/App";
@@ -35,7 +36,7 @@ const Login = () => {
   const { dispatch } = useContext(DispatchContext);
   const { state } = useContext(StateContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -44,20 +45,24 @@ const Login = () => {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    setErrorMessage(null)
+    setErrorMessage(null);
     const response = await loginUser(credentials);
     applyApiEffect(
       response,
-      (data) => { 
+      (data) => {
         dispatch({ type: AUTHENTICATE, payload: authenticated });
         localStorage.setItem("authStatus", JSON.stringify(authenticated));
         setLoading(false);
       },
       (error: ApiError) => {
         setLoading(false);
-        setErrorMessage(getErrorMessage(error))
+        setErrorMessage(getErrorMessage(error));
       }
-    )
+    );
+  };
+
+  const redirectToSignUp = () => {
+    history("/register");
   };
 
   const handleInputChange = (
@@ -89,7 +94,7 @@ const Login = () => {
   }
 
   return (
-    <>
+    <Box w="450px" boxShadow="2xl" p="20px" border="white" borderRadius="10px">
       <form onSubmit={handleLogin}>
         {errorMessage && !loading ? (
           <Alert status="error">
@@ -133,7 +138,19 @@ const Login = () => {
           Login
         </Button>
       </form>
-    </>
+      <Divider
+        marginTop="20px"
+        borderColor="teal"
+        w="100%"
+        marginBottom="10px"
+      />
+      <Text>Do not have an account yet ?</Text>
+      <Flex justifyContent="center">
+        <Button colorScheme="teal" marginTop="10px" onClick={redirectToSignUp}>
+          Create an account
+        </Button>
+      </Flex>
+    </Box>
   );
 };
 

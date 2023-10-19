@@ -11,6 +11,9 @@
       color: black;
       z-index: 20;
       font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+
     }
   }
   &__filter {

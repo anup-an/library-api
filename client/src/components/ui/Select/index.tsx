@@ -16,10 +16,11 @@ export interface SelectOption {
 interface IProps {
   selectConfig: SelectOption;
   handleSelect: (selectedOption: { optionKey: string; value: any }) => void;
+  disabled: boolean;
 }
 
 const Dropdown = (props: IProps) => {
-  const { selectConfig, handleSelect } = props;
+  const { selectConfig, handleSelect, disabled } = props;
 
   const selectOption = (event: any) => {
     event.preventDefault();
@@ -30,8 +31,10 @@ const Dropdown = (props: IProps) => {
   };
   return (
     <div className="select">
-      <Select onChange={selectOption} borderColor="black">
-        <option value="" selected disabled hidden>{selectConfig.name}</option>
+      <Select onChange={selectOption} borderColor="black" isDisabled={disabled}>
+        <option value="" selected disabled hidden>
+          {selectConfig.name}
+        </option>
         {selectConfig.options.map((option) => (
           <option value={JSON.stringify(option.value)} key={option.name}>
             {option.name}
