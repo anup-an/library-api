@@ -115,7 +115,7 @@ const BookList = (props: IProps) => {
         ) : (
           ""
         )}
-        <Loader displayText="Searching for books! Please wait ..." />
+        <Loader displayText="" />
       </Box>
     );
   }

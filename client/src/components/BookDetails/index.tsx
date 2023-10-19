@@ -94,7 +94,7 @@ const BookDetails = () => {
   if (isLoading(bookFetch)) {
     return (
       <Box marginTop={85}>
-        <Loader displayText="Loading book! Please wait ..." />
+        <Loader displayText="" />
       </Box>
     );
   }
