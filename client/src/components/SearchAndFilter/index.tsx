@@ -3,18 +3,14 @@ import { DispatchContext } from "src/App";
 import _ from "lodash";
 import {
   Box,
-  Button,
   Heading,
-  Icon,
-  IconButton,
   InputGroup,
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";
-import { GrSearchAdvanced } from "react-icons/gr";
 
 import { SEARCH_BOOKS } from "src/actions/book";
-import { Option, SelectOption } from "src/components/ui/Select";
+import { SelectOption } from "src/components/ui/Select";
 import "./SearchAndFilter.scss";
 import Select from "src/components/ui/Select";
 import { Checkbox, FormControl, Input, Stack } from "@chakra-ui/react";
@@ -22,6 +18,7 @@ import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "@chakra-ui/icons";
 
 interface IProps {
   selectOptions: SelectOption[];
+  disabled: boolean;
 }
 
 const SearchAndFilter = (props: IProps) => {
@@ -30,7 +27,7 @@ const SearchAndFilter = (props: IProps) => {
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [filter, setFilter] = useState({});
   const { dispatch } = useContext(DispatchContext);
-  const { selectOptions } = props;
+  const { selectOptions, disabled } = props;
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event?.preventDefault();
@@ -77,7 +74,7 @@ const SearchAndFilter = (props: IProps) => {
   return (
     <form onSubmit={handleSubmit} className="search-filter">
       <div className="search-filter__search">
-        <FormControl>
+        <FormControl isDisabled={disabled}>
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
@@ -96,7 +93,11 @@ const SearchAndFilter = (props: IProps) => {
               alignItems="center"
               justifyContent="center"
               children={
-                <button onClick={toggleSearchOptions} className="options">
+                <button
+                  onClick={toggleSearchOptions}
+                  className="options"
+                  disabled={disabled}
+                >
                   {isAdvancedSearch ? (
                     <ChevronUpIcon color="black" />
                   ) : (
@@ -146,7 +147,11 @@ const SearchAndFilter = (props: IProps) => {
       <div className="search-filter__filter">
         {selectOptions.map((option) => (
           <div key={option.name} className="option">
-            <Select selectConfig={option} handleSelect={handleSelect} />
+            <Select
+              selectConfig={option}
+              handleSelect={handleSelect}
+              disabled={disabled}
+            />
           </div>
         ))}
       </div>
