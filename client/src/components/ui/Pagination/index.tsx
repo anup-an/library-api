@@ -48,9 +48,10 @@ const Pagination = (props: IProps) => {
         <>
           {isButtonVisible(num) ? (
             <Button
+              colorScheme="teal"  
               width="40px"
               height="40px"
-              variant={currentPage === num ? "solid" : "ghost"}
+              variant={currentPage === num ? "solid" : "outline"}
               onClick={() => handlePageChange(num)}
             >
               {num}
