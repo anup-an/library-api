@@ -1,5 +1,6 @@
 import { Box, Text, Flex } from "@chakra-ui/layout";
 import { Button} from "@chakra-ui/react";
+import Footer from "src/components/Footer";
 
 const LandingPage = () => {
   return (
@@ -49,6 +50,7 @@ const LandingPage = () => {
           </Box>
         </Flex>
       </Flex>
+      <Footer />
     </Box>
   );
 };
