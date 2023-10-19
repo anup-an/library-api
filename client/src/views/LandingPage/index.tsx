@@ -1,8 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { Box, Text, Flex } from "@chakra-ui/layout";
-import { Button} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import Footer from "src/components/Footer";
 
 const LandingPage = () => {
+  const history = useNavigate();
+
+  const redirectToBooksPage = () => {
+    history("/books")
+  }
+  
   return (
     <Box>
       <Box
@@ -44,7 +51,12 @@ const LandingPage = () => {
             </Text>
           </Box>
           <Box>
-            <Button colorScheme="teal" variant="solid" marginTop="50px">
+            <Button
+              colorScheme="teal"
+              variant="solid"
+              marginTop="50px"
+              onClick={redirectToBooksPage}
+            >
               Browse
             </Button>
           </Box>
