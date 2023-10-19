@@ -28,7 +28,14 @@ const INITIAL_PAGINATION_CONFIG: PaginationConfig = {
   currentPage: 1,
 };
 
-const BookList = () => {
+interface IProps {
+  emitBooksState: (
+    booksState: ApiData<CollectionPayload<Book>, ApiError>
+  ) => void;
+}
+
+const BookList = (props: IProps) => {
+  const { emitBooksState } = props;
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(
     INITIAL_PAGINATION_CONFIG.currentPage
@@ -86,6 +93,10 @@ const BookList = () => {
     paginationConfig.pageSize,
     currentPage,
   ]);
+
+  useEffect(() => {
+    emitBooksState(booksFetch);
+  }, [booksFetch]);
 
   if (isLoading(booksFetch)) {
     return (
