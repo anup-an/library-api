@@ -12,7 +12,7 @@ This is a full-stack library web application.
   - [Getting started](#getting-started)
 
 ## About The Project
-![Frontpage](public/frontpage.png)
+![Frontpage](client/public/frontpage.png)
 
 ### Built With
 
