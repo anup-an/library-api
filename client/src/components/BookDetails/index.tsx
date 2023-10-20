@@ -112,9 +112,17 @@ const BookDetails = () => {
 
   return (
     <Box fontSize="16px">
-      <Flex alignItems="flex-end" gap="30px">
-        <img alt={book.title} src={book.book_image || ""} />
-        <div>
+      <Flex
+        alignItems={["center", "center", "center", "flex-end"]}
+        gap="30px"
+        flexDirection={["column", "column", "column", "row"]}
+        justifyContent={["center", "center", "center", "flex-start"]}
+        width="100%"
+      >
+        <Box border="gray.100" borderRadius="10px" width="100%">
+          <img alt={book.title} src={book.book_image || ""} />
+        </Box>
+        <Box width="100%">
           <Grid
             templateColumns="repeat(2, 1fr)"
             rowGap={5}
@@ -131,7 +139,7 @@ const BookDetails = () => {
           >
             Borrow
           </Button>
-        </div>
+        </Box>
       </Flex>
       <Heading fontSize="lg" marginTop="16px">
         Description
