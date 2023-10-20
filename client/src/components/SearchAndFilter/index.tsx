@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { useOutsideClick } from '@chakra-ui/react'
-import { TbSettingsSearch } from 'react-icons/tb'
+import { useOutsideClick } from "@chakra-ui/react";
+import { TbSettingsSearch } from "react-icons/tb";
 
 import { DispatchContext } from "src/App";
 import _ from "lodash";
@@ -10,7 +10,8 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Icon
+  Icon,
+  Grid,
 } from "@chakra-ui/react";
 
 import { SEARCH_BOOKS } from "src/actions/book";
@@ -32,7 +33,7 @@ const SearchAndFilter = (props: IProps) => {
   const [filter, setFilter] = useState({});
   const { dispatch } = useContext(DispatchContext);
   const { selectOptions, disabled } = props;
-  const ref = useRef(null)
+  const ref = useRef(null);
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event?.preventDefault();
@@ -72,7 +73,7 @@ const SearchAndFilter = (props: IProps) => {
   useOutsideClick({
     ref: ref,
     handler: () => setIsAdvancedSearch(false),
-  })
+  });
 
   useEffect(() => {
     dispatch({
@@ -82,87 +83,93 @@ const SearchAndFilter = (props: IProps) => {
   }, [search, searchFields, filter]);
 
   return (
-    <form onSubmit={handleSubmit} className="search-filter">
-      <div className="search-filter__search">
-        <FormControl isDisabled={disabled}>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              children={<SearchIcon color="gray.300" />}
-            />
-            <Input
-              id="search"
-              name="search"
-              borderColor="black"
-              onChange={onSearchInputChange}
-              placeholder="Search"
-              min-Width="350px"
-            />
-            <InputRightElement
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              children={
-                <button
-                  onClick={toggleSearchOptions}
-                  className="options"
-                  disabled={disabled}
-                >
-                  <Icon as={TbSettingsSearch} color={disabled ? "gray.400" : "gray:800" } />
-                </button>
-              }
-            />
-          </InputGroup>
-        </FormControl>
-        
-        <Box
-          boxShadow="xl"
-          borderColor="black"
-          minHeight="100px"
-          width="100%"
-          className={`${
-            isAdvancedSearch ? "display-search-options" : "hide-search-options"
-            }`}
-          ref={ref}
-        >
-          <Box display="flex" flexDirection="column" padding="20px">
-            <Heading fontSize="16px" fontWeight="bold">
-              Search fields
-            </Heading>
+    <>
+      <form onSubmit={handleSubmit} className="search-filter">
+        <div className="search-filter__search">
+          <FormControl isDisabled={disabled}>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<SearchIcon color="gray.300" />}
+              />
+              <Input
+                id="search"
+                name="search"
+                borderColor="black"
+                onChange={onSearchInputChange}
+                placeholder="Search"
+                minWidth="350px"
+              />
+              <InputRightElement
+                children={
+                  <button
+                    onClick={toggleSearchOptions}
+                    className="options"
+                    disabled={disabled}
+                  >
+                    <Icon
+                      as={TbSettingsSearch}
+                      color={disabled ? "gray.400" : "gray:800"}
+                    />
+                  </button>
+                }
+              />
+            </InputGroup>
+          </FormControl>
+          <Box
+            ref={ref}
+            display={isAdvancedSearch ? "block" : "none"}
+            boxShadow={"2xl"}
+            border="gray.300"
+            borderRadius="10px"
+            position="absolute"
+            padding="30px"
+            marginTop="5px"
+          >
+            <Box display="flex" flexDirection="column">
+              <Heading fontSize="16px" fontWeight="bold">
+                Search fields
+              </Heading>
 
-            <Stack spacing={5} direction="row" marginTop="5px">
-              <Checkbox
-                value="title"
-                fontSize="12px"
-                defaultChecked={searchFields.includes("title")}
-                onChange={handleSearchCheckboxChange}
-              >
-                Title
-              </Checkbox>
-              <Checkbox
-                value="series"
-                fontSize="12px"
-                defaultChecked={searchFields.includes("series")}
-                onChange={handleSearchCheckboxChange}
-              >
-                Series
-              </Checkbox>
-            </Stack>
+              <Stack spacing={5} direction="row" marginTop="5px">
+                <Checkbox
+                  value="title"
+                  fontSize="12px"
+                  defaultChecked={searchFields.includes("title")}
+                  onChange={handleSearchCheckboxChange}
+                >
+                  Title
+                </Checkbox>
+                <Checkbox
+                  value="series"
+                  fontSize="12px"
+                  defaultChecked={searchFields.includes("series")}
+                  onChange={handleSearchCheckboxChange}
+                >
+                  Series
+                </Checkbox>
+              </Stack>
+            </Box>
+            <div className="search-filter__filter">
+              <Heading fontSize="16px" fontWeight="bold">
+                Filters
+              </Heading>
+              <Grid templateColumns={"repeat(2, 1fr)"}>
+              {selectOptions.map((option) => (
+                <div key={option.name} className="option">
+                  <Select
+                    selectConfig={option}
+                    handleSelect={handleSelect}
+                    disabled={disabled}
+                  />
+                </div>
+              ))}
+                </Grid>
+            </div>
           </Box>
-        </Box>
-      </div>
-      <div className="search-filter__filter">
-        {selectOptions.map((option) => (
-          <div key={option.name} className="option">
-            <Select
-              selectConfig={option}
-              handleSelect={handleSelect}
-              disabled={disabled}
-            />
-          </div>
-        ))}
-      </div>
-    </form>
+        </div>
+      </form>
+    </>
   );
 };
 
