@@ -86,7 +86,7 @@ const SearchAndFilter = (props: IProps) => {
     <>
       <form onSubmit={handleSubmit} className="search-filter">
         <div className="search-filter__search">
-          <FormControl isDisabled={disabled}>
+          <FormControl>
             <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
