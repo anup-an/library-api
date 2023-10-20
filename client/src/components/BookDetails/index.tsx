@@ -119,7 +119,7 @@ const BookDetails = () => {
         justifyContent={["center", "center", "center", "flex-start"]}
         width="100%"
       >
-        <Box border="gray.100" borderRadius="10px" width="100%">
+        <Box border="gray.100" borderRadius="10px">
           <img alt={book.title} src={book.book_image || ""} />
         </Box>
         <Box width="100%">
