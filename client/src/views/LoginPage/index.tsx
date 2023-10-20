@@ -11,10 +11,14 @@ const LoginPage = () => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Flex w="50%" justifyContent="center">
+      <Flex
+        w="50%"
+        display={["none", "none", "none", "flex"]}
+        justifyContent="center"
+      >
         <TagLine />
       </Flex>
-      <Flex w="50%" justifyContent="center">
+      <Flex w={["100%", "100%", "100%", "50%"]} justifyContent="center">
         <Login />
       </Flex>
     </Box>

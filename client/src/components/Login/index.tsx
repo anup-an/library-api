@@ -99,8 +99,9 @@ const Login = () => {
         {errorMessage && !loading ? (
           <Alert status="error">
             <AlertIcon />
-            <AlertTitle>Login failed!</AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
+            <AlertDescription display="flex">
+              Login failed! {errorMessage}
+            </AlertDescription>
           </Alert>
         ) : (
           ""

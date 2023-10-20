@@ -1,3 +1,5 @@
+import { Box } from "@chakra-ui/layout";
+
 import BookList from "src/components/BookList";
 import SearchAndFilter from "src/components/SearchAndFilter";
 import { SelectOption } from "src/components/ui/Select";
@@ -44,12 +46,12 @@ const BookListPage = () => {
 
   return (
     <div className="booklist-page">
-      <div className="booklist-page__search">
+      <Box className="booklist-page__search" backgroundColor="gray.100">
         <SearchAndFilter
           selectOptions={selectOptions}
           disabled={isLoading(booksState)}
         />
-      </div>
+      </Box>
       <div className="booklist-page__list">
         <BookList emitBooksState={handleFetchState} />
       </div>
