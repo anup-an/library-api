@@ -1,4 +1,4 @@
-import { Select } from "@chakra-ui/react";
+import { Select, Text } from "@chakra-ui/react";
 import "./Select.scss";
 
 export interface Option {
@@ -31,8 +31,9 @@ const Dropdown = (props: IProps) => {
   };
   return (
     <div className="select">
-      <Select onChange={selectOption} borderColor="black" isDisabled={disabled}>
-        <option value="" selected disabled hidden>
+      <Text fontSize="16px">{selectConfig.name}</Text>
+      <Select onChange={selectOption} borderColor="black" isDisabled={disabled} >
+        <option value="" defaultChecked disabled hidden>
           {selectConfig.name}
         </option>
         {selectConfig.options.map((option) => (

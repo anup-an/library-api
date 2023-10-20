@@ -181,7 +181,7 @@ const BookList = (props: IProps) => {
       <ul className="book-list__items">
         <Grid
           templateColumns={{
-            base: "repeat(3, 1fr)",
+            base: "repeat(1, 1fr)",
             sm: "repeat(2, 1fr)",
             md: "repeat(3, 1fr)",
             lg: "repeat(4, 1fr)",

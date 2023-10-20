@@ -48,22 +48,24 @@ const Pagination = (props: IProps) => {
         <>
           {isButtonVisible(num) ? (
             <Button
-              colorScheme="teal"  
+              colorScheme="teal"
               width="40px"
               height="40px"
+              display={["none", "none", "none", "none","flex"]}
+              justifyContent="center"
               variant={currentPage === num ? "solid" : "outline"}
               onClick={() => handlePageChange(num)}
             >
-              {num}
+              <p>{num}</p>
             </Button>
           ) : isDotted(num) ? (
             <Box
               width="40px"
               height="40px"
               fontWeight="bold"
-              display="flex"
               justifyContent="center"
               alignItems="center"
+              display={["none", "none", "none", "flex"]}
             >
               <p>...</p>
             </Box>

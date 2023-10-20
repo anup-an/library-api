@@ -64,7 +64,7 @@ const Register = () => {
   };
 
   const redirectToLogin = () => {
-    history("/register");
+    history("/login");
   };
 
   return (
