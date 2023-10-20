@@ -98,7 +98,7 @@ const SearchAndFilter = (props: IProps) => {
                 borderColor="black"
                 onChange={onSearchInputChange}
                 placeholder="Search"
-                minWidth="350px"
+                minWidth={["300px","350px"]}
               />
               <InputRightElement
                 children={
@@ -123,8 +123,10 @@ const SearchAndFilter = (props: IProps) => {
             border="gray.300"
             borderRadius="10px"
             position="absolute"
+            zIndex={"30"}
             padding="30px"
             marginTop="5px"
+            backgroundColor="gray.100"
           >
             <Box display="flex" flexDirection="column">
               <Heading fontSize="16px" fontWeight="bold">
@@ -154,7 +156,7 @@ const SearchAndFilter = (props: IProps) => {
               <Heading fontSize="16px" fontWeight="bold">
                 Filters
               </Heading>
-              <Grid templateColumns={"repeat(2, 1fr)"}>
+              <Grid templateColumns={["repeat(1, 1fr)","repeat(2, 1fr)"]}>
               {selectOptions.map((option) => (
                 <div key={option.name} className="option">
                   <Select
