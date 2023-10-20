@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useOutsideClick } from '@chakra-ui/react'
 import { TbSettingsSearch } from 'react-icons/tb'
 
 import { DispatchContext } from "src/App";
@@ -17,7 +18,7 @@ import { SelectOption } from "src/components/ui/Select";
 import "./SearchAndFilter.scss";
 import Select from "src/components/ui/Select";
 import { Checkbox, FormControl, Input, Stack } from "@chakra-ui/react";
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "@chakra-ui/icons";
+import { SearchIcon } from "@chakra-ui/icons";
 
 interface IProps {
   selectOptions: SelectOption[];
@@ -31,6 +32,7 @@ const SearchAndFilter = (props: IProps) => {
   const [filter, setFilter] = useState({});
   const { dispatch } = useContext(DispatchContext);
   const { selectOptions, disabled } = props;
+  const ref = useRef(null)
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event?.preventDefault();
@@ -66,6 +68,11 @@ const SearchAndFilter = (props: IProps) => {
   const handleSelect = (option: { optionKey: string; value: any }) => {
     setFilter({ ...filter, [option.optionKey]: JSON.parse(option.value) });
   };
+
+  useOutsideClick({
+    ref: ref,
+    handler: () => setIsAdvancedSearch(false),
+  })
 
   useEffect(() => {
     dispatch({
@@ -107,7 +114,7 @@ const SearchAndFilter = (props: IProps) => {
             />
           </InputGroup>
         </FormControl>
-
+        
         <Box
           boxShadow="xl"
           borderColor="black"
@@ -115,7 +122,8 @@ const SearchAndFilter = (props: IProps) => {
           width="100%"
           className={`${
             isAdvancedSearch ? "display-search-options" : "hide-search-options"
-          }`}
+            }`}
+          ref={ref}
         >
           <Box display="flex" flexDirection="column" padding="20px">
             <Heading fontSize="16px" fontWeight="bold">
