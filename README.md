@@ -1,5 +1,5 @@
 # About the app
-This is a full-stack library web application.
+This is a full-stack library web application built using React and Django frameworks.
 
 # Table of contents
 - [About the app](#about-the-app)
