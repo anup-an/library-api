@@ -1,7 +1,7 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import { AppState, appReducer, initialState } from "src/reducer";
 import "./App.scss";
 import { AppActions } from "./actions";
@@ -16,6 +16,7 @@ import LoginPage from "./views/LoginPage";
 import RegisterPage from "./views/RegisterPage";
 import RootLayout from "./views/RootLayout";
 import UserPage from "./views/UserPage";
+import Loader from "./components/ui/Loader";
 
 export const StateContext = createContext<{ state: AppState }>({
   state: initialState,
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
 
 function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
@@ -71,9 +73,11 @@ function App() {
         userResponse,
         (data) => {
           dispatch({ type: AUTHENTICATE, payload: authenticated });
+          setLoading(false);
         },
         (error) => {
           dispatch({ type: AUTHENTICATE, payload: unauthenticated });
+          setLoading(false);
         }
       );
     })();
@@ -83,9 +87,15 @@ function App() {
     <ChakraProvider>
       <DispatchContext.Provider value={{ dispatch }}>
         <StateContext.Provider value={{ state }}>
-          <div className="App">
-            <RouterProvider router={router} />
-          </div>
+          {!loading ? (
+            <div className="App">
+              <RouterProvider router={router} />
+            </div>
+          ) : (
+            <Flex height="100vh" alignItems="center" justifyContent="center">
+              <Loader displayText="" />
+            </Flex>
+          )}
         </StateContext.Provider>
       </DispatchContext.Provider>
     </ChakraProvider>
