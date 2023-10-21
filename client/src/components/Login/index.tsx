@@ -51,7 +51,6 @@ const Login = () => {
       response,
       (data) => {
         dispatch({ type: AUTHENTICATE, payload: authenticated });
-        localStorage.setItem("authStatus", JSON.stringify(authenticated));
         setLoading(false);
       },
       (error: ApiError) => {

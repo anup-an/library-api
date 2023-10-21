@@ -1,28 +1,25 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import { AppState, appReducer, initialState } from "src/reducer";
 import "./App.scss";
 import { AppActions } from "./actions";
-import { authenticated, isAuthenticated } from "./types/authenticate";
+import { AUTHENTICATE } from "./actions/authenticate";
+import { fetchUser } from "./api/user";
+import { applyApiEffect } from "./types/ApiTypes";
+import { authenticated, unauthenticated } from "./types/authenticate";
+import BookDetailsPage from "./views/BookDetailsPage";
 import BookListPage from "./views/BookListPage";
+import LandingPage from "./views/LandingPage";
 import LoginPage from "./views/LoginPage";
 import RegisterPage from "./views/RegisterPage";
-import BookDetailsPage from "./views/BookDetailsPage";
-import UserPage from "./views/UserPage";
 import RootLayout from "./views/RootLayout";
-import LandingPage from "./views/LandingPage";
-
-const getInitialState = (): AppState => {
-  const auth = localStorage.getItem("authStatus");
-  return auth && isAuthenticated(JSON.parse(auth))
-    ? { ...initialState, authStatus: authenticated }
-    : initialState;
-};
+import UserPage from "./views/UserPage";
+import Loader from "./components/ui/Loader";
 
 export const StateContext = createContext<{ state: AppState }>({
-  state: getInitialState(),
+  state: initialState,
 });
 
 export const DispatchContext = createContext<{
@@ -66,15 +63,39 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const [state, dispatch] = useReducer(appReducer, getInitialState());
+  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    (async () => {
+      const userResponse = await fetchUser();
+      applyApiEffect(
+        userResponse,
+        (data) => {
+          dispatch({ type: AUTHENTICATE, payload: authenticated });
+          setLoading(false);
+        },
+        (error) => {
+          dispatch({ type: AUTHENTICATE, payload: unauthenticated });
+          setLoading(false);
+        }
+      );
+    })();
+  }, []);
 
   return (
     <ChakraProvider>
       <DispatchContext.Provider value={{ dispatch }}>
         <StateContext.Provider value={{ state }}>
-          <div className="App">
-            <RouterProvider router={router} />
-          </div>
+          {!loading ? (
+            <div className="App">
+              <RouterProvider router={router} />
+            </div>
+          ) : (
+            <Flex height="100vh" alignItems="center" justifyContent="center">
+              <Loader displayText="" />
+            </Flex>
+          )}
         </StateContext.Provider>
       </DispatchContext.Provider>
     </ChakraProvider>
