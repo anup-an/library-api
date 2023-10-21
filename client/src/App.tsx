@@ -1,28 +1,24 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { AppState, appReducer, initialState } from "src/reducer";
 import "./App.scss";
 import { AppActions } from "./actions";
-import { authenticated, isAuthenticated } from "./types/authenticate";
+import { AUTHENTICATE } from "./actions/authenticate";
+import { fetchUser } from "./api/user";
+import { applyApiEffect } from "./types/ApiTypes";
+import { authenticated, unauthenticated } from "./types/authenticate";
+import BookDetailsPage from "./views/BookDetailsPage";
 import BookListPage from "./views/BookListPage";
+import LandingPage from "./views/LandingPage";
 import LoginPage from "./views/LoginPage";
 import RegisterPage from "./views/RegisterPage";
-import BookDetailsPage from "./views/BookDetailsPage";
-import UserPage from "./views/UserPage";
 import RootLayout from "./views/RootLayout";
-import LandingPage from "./views/LandingPage";
-
-const getInitialState = (): AppState => {
-  const auth = localStorage.getItem("authStatus");
-  return auth && isAuthenticated(JSON.parse(auth))
-    ? { ...initialState, authStatus: authenticated }
-    : initialState;
-};
+import UserPage from "./views/UserPage";
 
 export const StateContext = createContext<{ state: AppState }>({
-  state: getInitialState(),
+  state: initialState,
 });
 
 export const DispatchContext = createContext<{
@@ -66,7 +62,22 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const [state, dispatch] = useReducer(appReducer, getInitialState());
+  const [state, dispatch] = useReducer(appReducer, initialState);
+
+  useEffect(() => {
+    (async () => {
+      const userResponse = await fetchUser();
+      applyApiEffect(
+        userResponse,
+        (data) => {
+          dispatch({ type: AUTHENTICATE, payload: authenticated });
+        },
+        (error) => {
+          dispatch({ type: AUTHENTICATE, payload: unauthenticated });
+        }
+      );
+    })();
+  }, []);
 
   return (
     <ChakraProvider>
