@@ -2,14 +2,12 @@ version: "3.8"
 
 services:
   backend:
-    volumes:
-      - static:/static
     env_file:
       - .env
     build:
       context: ./server
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT}:8000"
     depends_on:
       - db
   db:
@@ -17,7 +15,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5466:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - db_volume:/var/lib/postgresql/data/
   frontend:
@@ -29,15 +27,16 @@ services:
     build:
       context: ./nginx
     volumes:
-      - static:/static
+      - ./nginx/templates/:/etc/nginx/templates
       - frontend:/var/www/client
     ports:
-      - "80:80"
+      - "${NGINX_PORT}:80"
     depends_on:
       - backend
       - frontend
+    env_file:
+      - .env
 
 volumes:
-  static:
   frontend:
   db_volume:

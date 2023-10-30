@@ -111,12 +111,9 @@ DATABASES = {
         'USER': env("POSTGRES_USER"),
         'PASSWORD': env("POSTGRES_PASSWORD"),
         'HOST': env("POSTGRES_HOST"),
-        'PORT': env("POSTGRES_PORT"),
+        'PORT': 5432,
     }
 }
-
-DATABASE_URL = env("DATABASE_URL")
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
