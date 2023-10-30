@@ -40,7 +40,7 @@ To get the full-stack application running locally follow these steps:
 - Install docker (https://docs.docker.com/get-docker/)
 - Add .env file to the root directory. Add variables included in dev.example file. You may also generate your own secret key for Django app.
 - `docker compose build` to build the application in the root folder
-- `docker compose up -d` to start the application. The application can be accessed at http://localhost/
+- `docker compose up -d` to start the application. The application can be accessed at http://localhost/ or any other address that you have added for NGINX_SERVER in .env file.
 - `docker compose down` to close the application
 
 
