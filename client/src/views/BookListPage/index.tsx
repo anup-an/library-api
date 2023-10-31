@@ -1,4 +1,7 @@
 import { Box } from "@chakra-ui/layout";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import _ from "lodash";
 
 import BookList from "src/components/BookList";
 import SearchAndFilter from "src/components/SearchAndFilter";
@@ -6,9 +9,30 @@ import { SelectOption } from "src/components/ui/Select";
 import "./BookListPage.scss";
 import { useState } from "react";
 import { ApiData, isLoading, loading } from "src/types/ApiTypes";
-import { CollectionPayload } from "src/types/common";
+import { CollectionPayload, FilterQuery, ListQuery } from "src/types/common";
 import { Book } from "src/types/book";
 import { ApiError } from "src/api/axios";
+import { buildQueryString } from "src/utils/helpers";
+
+export interface ListConfig {
+  search: string;
+  search_fields: string[];
+  filter: FilterQuery;
+  ordering: string;
+  page: number;
+  page_size: number;
+  count: number;
+}
+
+const initialListConfig: ListConfig = {
+  search: "",
+  search_fields: ["title"],
+  filter: {},
+  ordering: "",
+  count: 0,
+  page: 1,
+  page_size: 20,
+};
 
 const selectOptions: SelectOption[] = [
   {
@@ -37,12 +61,25 @@ const selectOptions: SelectOption[] = [
 ];
 
 const BookListPage = () => {
+  const history = useNavigate();
   const [booksState, setBooksState] =
     useState<ApiData<CollectionPayload<Book>, ApiError>>(loading);
-  
-  const handleFetchState = (booksState: ApiData<CollectionPayload<Book>, ApiError>) => {
-    setBooksState(booksState)
-  }
+  const [listConfig, setListConfig] = useState<ListConfig>(initialListConfig);
+
+  const handleFetchState = (
+    booksState: ApiData<CollectionPayload<Book>, ApiError>
+  ) => {
+    setBooksState(booksState);
+  };
+
+  const handleListOptionsChange = (config: ListConfig) => {
+    setListConfig({ ...config });
+    history(buildQueryString(_.omit(config, "count") as ListQuery));
+  };
+
+  useEffect(() => {
+    history(buildQueryString(_.omit(listConfig, "count") as ListQuery));
+  }, []);
 
   return (
     <div className="booklist-page">
@@ -50,6 +87,8 @@ const BookListPage = () => {
         <SearchAndFilter
           selectOptions={selectOptions}
           disabled={isLoading(booksState)}
+          onListOptionsChange={handleListOptionsChange}
+          listConfig={listConfig}
         />
       </Box>
       <div className="booklist-page__list">
