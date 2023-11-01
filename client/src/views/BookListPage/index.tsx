@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/layout";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 
 import BookList from "src/components/BookList";
@@ -13,6 +13,7 @@ import { CollectionPayload, FilterQuery, ListQuery } from "src/types/common";
 import { Book } from "src/types/book";
 import { ApiError } from "src/api/axios";
 import { buildQueryString } from "src/utils/helpers";
+import Pagination from "src/components/ui/Pagination";
 
 export interface ListConfig {
   search: string;
@@ -62,6 +63,7 @@ const selectOptions: SelectOption[] = [
 
 const BookListPage = () => {
   const history = useNavigate();
+  const location = useLocation();
   const [booksState, setBooksState] =
     useState<ApiData<CollectionPayload<Book>, ApiError>>(loading);
   const [listConfig, setListConfig] = useState<ListConfig>(initialListConfig);
@@ -78,7 +80,9 @@ const BookListPage = () => {
   };
 
   useEffect(() => {
-    history(buildQueryString(_.omit(listConfig, "count") as ListQuery));
+    if (!location.search) {
+      history(buildQueryString(_.omit(listConfig, "count") as ListQuery));
+    }
   }, []);
 
   return (
@@ -89,6 +93,10 @@ const BookListPage = () => {
           disabled={isLoading(booksState)}
           onListOptionsChange={handleListOptionsChange}
           listConfig={listConfig}
+        />
+        <Pagination
+          paginationConfig={listConfig}
+          onPageChange={handleListOptionsChange}
         />
       </Box>
       <div className="booklist-page__list">
