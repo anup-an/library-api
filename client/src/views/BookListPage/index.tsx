@@ -103,10 +103,14 @@ const BookListPage = () => {
           onListOptionsChange={handleListOptionsChange}
           listConfig={listConfig}
         />
-        <Pagination
-          paginationConfig={listConfig}
-          onPageChange={handleListOptionsChange}
-        />
+        {listConfig.count ? (
+          <Pagination
+            paginationConfig={listConfig}
+            onPageChange={handleListOptionsChange}
+          />
+        ) : (
+          ""
+        )}
       </Box>
       <div className="booklist-page__list">
         <BookList emitBooksState={handleFetchState} />
