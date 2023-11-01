@@ -29,15 +29,15 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['backend']
+ALLOWED_HOSTS = [env('NGINX_UPSTREAM')]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost',
+    env('NGINX_SERVER'),
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost']
+CSRF_TRUSTED_ORIGINS = [env('NGINX_SERVER')]
 
 CSRF_COOKIE_NAME = "csrftoken"
 
