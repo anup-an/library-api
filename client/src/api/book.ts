@@ -2,12 +2,11 @@ import axios, { ApiError } from "src/api/axios";
 import { BookDecoder, BookListDecoder } from "src/decoders/book";
 import { ApiData } from "src/types/ApiTypes";
 import { Book } from "src/types/book";
-import { CollectionPayload, ListQuery } from "src/types/common";
+import { CollectionPayload } from "src/types/common";
 import { API_URL } from "src/utils/constants";
-import { buildQueryString } from "src/utils/helpers";
 
 export const fetchBooks = async (
-  queryObj?: ListQuery
+  queryString: string
 ): Promise<ApiData<CollectionPayload<Book>, ApiError>> => {
   /*   const queryObj: ListQuery = {
     search: "time",
@@ -22,9 +21,7 @@ export const fetchBooks = async (
     page_size: 20,
   };
  */
-  const queryUrl = `${API_URL}/books/${
-    queryObj ? buildQueryString(queryObj) : ""
-  }`;
+  const queryUrl = `${API_URL}${queryString}`;
 
   return await axios.get<CollectionPayload<Book>, ApiError>(
     queryUrl,
