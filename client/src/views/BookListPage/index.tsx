@@ -8,7 +8,12 @@ import SearchAndFilter from "src/components/SearchAndFilter";
 import { SelectOption } from "src/components/ui/Select";
 import "./BookListPage.scss";
 import { useState } from "react";
-import { ApiData, isLoading, loading } from "src/types/ApiTypes";
+import {
+  ApiData,
+  isLoading,
+  loading,
+  pickDataOrDefault,
+} from "src/types/ApiTypes";
 import { CollectionPayload, FilterQuery, ListQuery } from "src/types/common";
 import { Book } from "src/types/book";
 import { ApiError } from "src/api/axios";
@@ -72,6 +77,10 @@ const BookListPage = () => {
     booksState: ApiData<CollectionPayload<Book>, ApiError>
   ) => {
     setBooksState(booksState);
+    setListConfig({
+      ...listConfig,
+      count: pickDataOrDefault(booksState, "count", 0),
+    });
   };
 
   const handleListOptionsChange = (config: ListConfig) => {
