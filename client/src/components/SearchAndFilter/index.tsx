@@ -1,38 +1,43 @@
-import { useContext, useEffect, useRef, useState } from "react";
 import { useOutsideClick } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import { TbSettingsSearch } from "react-icons/tb";
 
-import { DispatchContext } from "src/App";
-import _ from "lodash";
 import {
   Box,
+  Grid,
   Heading,
+  Icon,
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Icon,
-  Grid,
 } from "@chakra-ui/react";
+import _ from "lodash";
 
-import { SEARCH_BOOKS } from "src/actions/book";
-import { SelectOption } from "src/components/ui/Select";
-import "./SearchAndFilter.scss";
-import Select from "src/components/ui/Select";
-import { Checkbox, FormControl, Input, Stack } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { Checkbox, FormControl, Input, Stack } from "@chakra-ui/react";
+import Select, { SelectOption } from "src/components/ui/Select";
+import { FilterQuery } from "src/types/common";
+import { ListConfig } from "src/views/BookListPage";
+import "./SearchAndFilter.scss";
+
+export interface SearchOptions {
+  search: string;
+  search_fields: string[];
+  filter: FilterQuery;
+}
 
 interface IProps {
   selectOptions: SelectOption[];
   disabled: boolean;
+  onListOptionsChange: (config: ListConfig) => void;
+  listConfig: ListConfig;
 }
 
 const SearchAndFilter = (props: IProps) => {
-  const [search, setSearch] = useState<string>("");
-  const [searchFields, setSearchFields] = useState<string[]>(["title"]);
+  const { selectOptions, disabled, onListOptionsChange, listConfig } = props;
+  const { search_fields, filter } = listConfig;
+
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
-  const [filter, setFilter] = useState({});
-  const { dispatch } = useContext(DispatchContext);
-  const { selectOptions, disabled } = props;
   const ref = useRef(null);
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,15 +46,11 @@ const SearchAndFilter = (props: IProps) => {
   };
 
   const debouncedSearch = _.debounce((search: string) => {
-    setSearch(search);
+    onListOptionsChange({ ...listConfig, search });
   }, 300);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch({
-      type: SEARCH_BOOKS,
-      payload: { search: search, search_fields: searchFields, filter: filter },
-    });
   };
 
   const toggleSearchOptions = () => {
@@ -59,28 +60,24 @@ const SearchAndFilter = (props: IProps) => {
   const handleSearchCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    event.target.checked
-      ? setSearchFields([...searchFields, event.target.value])
-      : setSearchFields(
-          searchFields.filter((field) => field !== event.target.value)
-        );
+    const fields = event.target.checked
+      ? [...search_fields, event.target.value]
+      : search_fields.filter((field: string) => field !== event.target.value);
+    onListOptionsChange({ ...listConfig, search_fields: fields });
   };
 
   const handleSelect = (option: { optionKey: string; value: any }) => {
-    setFilter({ ...filter, [option.optionKey]: JSON.parse(option.value) });
+    const filterObj = {
+      ...filter,
+      [option.optionKey]: JSON.parse(option.value),
+    };
+    onListOptionsChange({ ...listConfig, filter: filterObj });
   };
 
   useOutsideClick({
     ref: ref,
     handler: () => setIsAdvancedSearch(false),
   });
-
-  useEffect(() => {
-    dispatch({
-      type: SEARCH_BOOKS,
-      payload: { search: search, search_fields: searchFields, filter: filter },
-    });
-  }, [search, searchFields, filter]);
 
   return (
     <>
@@ -98,7 +95,7 @@ const SearchAndFilter = (props: IProps) => {
                 borderColor="black"
                 onChange={onSearchInputChange}
                 placeholder="Search"
-                minWidth={["300px","350px"]}
+                minWidth={["300px", "350px"]}
               />
               <InputRightElement
                 children={
@@ -137,7 +134,7 @@ const SearchAndFilter = (props: IProps) => {
                 <Checkbox
                   value="title"
                   fontSize="12px"
-                  defaultChecked={searchFields.includes("title")}
+                  defaultChecked={search_fields.includes("title")}
                   onChange={handleSearchCheckboxChange}
                 >
                   Title
@@ -145,7 +142,7 @@ const SearchAndFilter = (props: IProps) => {
                 <Checkbox
                   value="series"
                   fontSize="12px"
-                  defaultChecked={searchFields.includes("series")}
+                  defaultChecked={search_fields.includes("series")}
                   onChange={handleSearchCheckboxChange}
                 >
                   Series
@@ -156,17 +153,17 @@ const SearchAndFilter = (props: IProps) => {
               <Heading fontSize="16px" fontWeight="bold">
                 Filters
               </Heading>
-              <Grid templateColumns={["repeat(1, 1fr)","repeat(2, 1fr)"]}>
-              {selectOptions.map((option) => (
-                <div key={option.name} className="option">
-                  <Select
-                    selectConfig={option}
-                    handleSelect={handleSelect}
-                    disabled={disabled}
-                  />
-                </div>
-              ))}
-                </Grid>
+              <Grid templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]}>
+                {selectOptions.map((option) => (
+                  <div key={option.name} className="option">
+                    <Select
+                      selectConfig={option}
+                      handleSelect={handleSelect}
+                      disabled={disabled}
+                    />
+                  </div>
+                ))}
+              </Grid>
             </div>
           </Box>
         </div>

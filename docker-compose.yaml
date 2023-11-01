@@ -2,8 +2,6 @@ version: "3.8"
 
 services:
   backend:
-    env_file:
-      - .env
     build:
       context: ./server
     ports:
@@ -13,7 +11,7 @@ services:
   db:
     image: postgres
     env_file:
-      - .env
+      - ./server/library_project/.env
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
