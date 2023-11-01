@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/layout";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 
 import BookList from "src/components/BookList";
@@ -8,11 +8,17 @@ import SearchAndFilter from "src/components/SearchAndFilter";
 import { SelectOption } from "src/components/ui/Select";
 import "./BookListPage.scss";
 import { useState } from "react";
-import { ApiData, isLoading, loading } from "src/types/ApiTypes";
+import {
+  ApiData,
+  isLoading,
+  loading,
+  pickDataOrDefault,
+} from "src/types/ApiTypes";
 import { CollectionPayload, FilterQuery, ListQuery } from "src/types/common";
 import { Book } from "src/types/book";
 import { ApiError } from "src/api/axios";
 import { buildQueryString } from "src/utils/helpers";
+import Pagination from "src/components/ui/Pagination";
 
 export interface ListConfig {
   search: string;
@@ -62,6 +68,7 @@ const selectOptions: SelectOption[] = [
 
 const BookListPage = () => {
   const history = useNavigate();
+  const location = useLocation();
   const [booksState, setBooksState] =
     useState<ApiData<CollectionPayload<Book>, ApiError>>(loading);
   const [listConfig, setListConfig] = useState<ListConfig>(initialListConfig);
@@ -70,6 +77,10 @@ const BookListPage = () => {
     booksState: ApiData<CollectionPayload<Book>, ApiError>
   ) => {
     setBooksState(booksState);
+    setListConfig({
+      ...listConfig,
+      count: pickDataOrDefault(booksState, "count", 0),
+    });
   };
 
   const handleListOptionsChange = (config: ListConfig) => {
@@ -78,7 +89,9 @@ const BookListPage = () => {
   };
 
   useEffect(() => {
-    history(buildQueryString(_.omit(listConfig, "count") as ListQuery));
+    if (!location.search) {
+      history(buildQueryString(_.omit(listConfig, "count") as ListQuery));
+    }
   }, []);
 
   return (
@@ -90,6 +103,14 @@ const BookListPage = () => {
           onListOptionsChange={handleListOptionsChange}
           listConfig={listConfig}
         />
+        {listConfig.count ? (
+          <Pagination
+            paginationConfig={listConfig}
+            onPageChange={handleListOptionsChange}
+          />
+        ) : (
+          ""
+        )}
       </Box>
       <div className="booklist-page__list">
         <BookList emitBooksState={handleFetchState} />

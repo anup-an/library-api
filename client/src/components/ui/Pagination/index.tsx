@@ -1,29 +1,29 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Button, HStack, IconButton } from "@chakra-ui/react";
 import _ from "lodash";
-import { PaginationConfig } from "./Types";
+import { ListConfig } from "src/views/BookListPage";
 
 interface IProps {
-  paginationConfig: PaginationConfig;
-  handlePageChange: (pageNum: number) => void;
+  paginationConfig: ListConfig;
+  onPageChange: (config: ListConfig) => void;
 }
 
 const SIBLING_COUNT = 1;
 
 const Pagination = (props: IProps) => {
-  const { count, pageSize, currentPage } = props.paginationConfig;
-  const handlePageChange = props.handlePageChange;
-  const total_pages = Math.ceil(count / pageSize);
+  const { onPageChange, paginationConfig } = props;
+
+  const { count, page_size, page } = paginationConfig;
+  const total_pages = Math.ceil(count / page_size);
 
   const isButtonVisible = (pageNum: number) => {
     const isVisible =
-      Math.abs(pageNum - currentPage) <= SIBLING_COUNT ||
+      Math.abs(pageNum - page) <= SIBLING_COUNT ||
       pageNum === 1 ||
       pageNum === total_pages ||
-      (pageNum - 1 <= SIBLING_COUNT + 3 &&
-        pageNum - currentPage > SIBLING_COUNT) ||
+      (pageNum - 1 <= SIBLING_COUNT + 3 && pageNum - page > SIBLING_COUNT) ||
       (total_pages - pageNum <= SIBLING_COUNT + 3 &&
-        currentPage - pageNum > SIBLING_COUNT);
+        page - pageNum > SIBLING_COUNT);
     return isVisible;
   };
 
@@ -31,6 +31,10 @@ const Pagination = (props: IProps) => {
     const isCurrentVisible = isButtonVisible(pageNum);
     const isPreviousVisible = isButtonVisible(pageNum - 1);
     return !isCurrentVisible && isPreviousVisible;
+  };
+
+  const handlePageChange = (pageNum: number) => {
+    onPageChange({ ...paginationConfig, page: pageNum });
   };
 
   return (
@@ -41,8 +45,8 @@ const Pagination = (props: IProps) => {
         aria-label="Done"
         fontSize="20px"
         icon={<ChevronLeftIcon />}
-        isDisabled={currentPage === 1}
-        onClick={(e) => handlePageChange(currentPage - 1)}
+        isDisabled={page === 1}
+        onClick={(e) => handlePageChange(page - 1)}
       />
       {_.range(1, total_pages + 1, 1).map((num) => (
         <>
@@ -51,9 +55,9 @@ const Pagination = (props: IProps) => {
               colorScheme="teal"
               width="40px"
               height="40px"
-              display={["none", "none", "none", "none","flex"]}
+              display={["none", "none", "none", "none", "flex"]}
               justifyContent="center"
-              variant={currentPage === num ? "solid" : "outline"}
+              variant={page === num ? "solid" : "outline"}
               onClick={() => handlePageChange(num)}
             >
               <p>{num}</p>
@@ -81,8 +85,8 @@ const Pagination = (props: IProps) => {
         aria-label="Done"
         fontSize="20px"
         icon={<ChevronRightIcon />}
-        isDisabled={currentPage === total_pages}
-        onClick={(e) => handlePageChange(currentPage + 1)}
+        isDisabled={page === total_pages}
+        onClick={(e) => handlePageChange(page + 1)}
       />
     </HStack>
   );
