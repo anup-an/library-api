@@ -8,10 +8,12 @@ services:
       - "${BACKEND_PORT}:8000"
     depends_on:
       - db
+    env_file:
+      - .env
   db:
     image: postgres
     env_file:
-      - ./server/library_project/.env
+      - .env
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
