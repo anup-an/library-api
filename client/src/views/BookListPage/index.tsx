@@ -17,7 +17,7 @@ import {
 import { CollectionPayload, FilterQuery, ListQuery } from "src/types/common";
 import { Book } from "src/types/book";
 import { ApiError } from "src/api/axios";
-import { buildQueryString } from "src/utils/helpers";
+import { buildQueryString, getObjectFromQueryString } from "src/utils/helpers";
 import Pagination from "src/components/ui/Pagination";
 
 export interface ListConfig {
@@ -46,7 +46,7 @@ const selectOptions: SelectOption[] = [
     value: "language",
     options: [
       { name: "All", value: "" },
-      { name: "English", value: { name: "English" } },
+      { name: "English", value: { name: "English" }},
       { name: "German", value: { name: "German" } },
       { name: "French", value: { name: "French" } },
       { name: "Persian", value: { name: "Persian" } },
@@ -71,7 +71,11 @@ const BookListPage = () => {
   const location = useLocation();
   const [booksState, setBooksState] =
     useState<ApiData<CollectionPayload<Book>, ApiError>>(loading);
-  const [listConfig, setListConfig] = useState<ListConfig>(initialListConfig);
+  const [listConfig, setListConfig] = useState<ListConfig>(
+    location.search
+      ? getObjectFromQueryString(location.search.replace("?", "").replace("&&", "&"))
+      : initialListConfig
+  );
 
   const handleFetchState = (
     booksState: ApiData<CollectionPayload<Book>, ApiError>
