@@ -92,9 +92,10 @@ const SearchAndFilter = (props: IProps) => {
               <Input
                 id="search"
                 name="search"
+                defaultValue={listConfig.search}
                 borderColor="black"
-                onChange={onSearchInputChange}
                 placeholder="Search"
+                onChange={onSearchInputChange}
                 minWidth={["300px", "350px"]}
               />
               <InputRightElement
@@ -160,6 +161,7 @@ const SearchAndFilter = (props: IProps) => {
                       selectConfig={option}
                       handleSelect={handleSelect}
                       disabled={disabled}
+                      defaultValue={listConfig.filter[option.value]}
                     />
                   </div>
                 ))}
