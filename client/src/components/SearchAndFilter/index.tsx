@@ -104,6 +104,7 @@ const SearchAndFilter = (props: IProps) => {
                     onClick={toggleSearchOptions}
                     className="options"
                     disabled={disabled}
+                    type="button"
                   >
                     <Icon
                       as={TbSettingsSearch}
