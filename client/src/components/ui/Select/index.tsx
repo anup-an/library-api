@@ -17,10 +17,11 @@ interface IProps {
   selectConfig: SelectOption;
   handleSelect: (selectedOption: { optionKey: string; value: any }) => void;
   disabled: boolean;
+  defaultValue: any;
 }
 
 const Dropdown = (props: IProps) => {
-  const { selectConfig, handleSelect, disabled } = props;
+  const { selectConfig, handleSelect, disabled, defaultValue } = props;
 
   const selectOption = (event: any) => {
     event.preventDefault();
@@ -29,11 +30,17 @@ const Dropdown = (props: IProps) => {
       value: event.target.value,
     });
   };
+
   return (
     <div className="select">
       <Text fontSize="16px">{selectConfig.name}</Text>
-      <Select onChange={selectOption} borderColor="black" isDisabled={disabled} >
-        <option value="" defaultChecked disabled hidden>
+      <Select
+        onChange={selectOption}
+        borderColor="black"
+        isDisabled={disabled}
+        defaultValue={JSON.stringify(defaultValue)}
+      >
+        <option value="" disabled hidden>
           {selectConfig.name}
         </option>
         {selectConfig.options.map((option) => (
