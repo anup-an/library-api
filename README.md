@@ -1,5 +1,5 @@
 # About the app
-This is a full-stack library web application built using React and Django frameworks.
+This is a full-stack library web application built using React and Django frameworks. The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b
 
 # Table of contents
 - [About the app](#about-the-app)
