@@ -46,7 +46,7 @@ const SearchAndFilter = (props: IProps) => {
   };
 
   const debouncedSearch = _.debounce((search: string) => {
-    onListOptionsChange({ ...listConfig, search });
+    onListOptionsChange({ ...listConfig, search, page: 1 });
   }, 300);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,7 +63,7 @@ const SearchAndFilter = (props: IProps) => {
     const fields = event.target.checked
       ? [...search_fields, event.target.value]
       : search_fields.filter((field: string) => field !== event.target.value);
-    onListOptionsChange({ ...listConfig, search_fields: fields });
+    onListOptionsChange({ ...listConfig, search_fields: fields, page: 1 });
   };
 
   const handleSelect = (option: { optionKey: string; value: any }) => {
@@ -71,7 +71,7 @@ const SearchAndFilter = (props: IProps) => {
       ...filter,
       [option.optionKey]: JSON.parse(option.value),
     };
-    onListOptionsChange({ ...listConfig, filter: filterObj });
+    onListOptionsChange({ ...listConfig, filter: filterObj, page: 1 });
   };
 
   useOutsideClick({
