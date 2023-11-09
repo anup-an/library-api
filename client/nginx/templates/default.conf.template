@@ -1,0 +1,12 @@
+server {
+	listen ${NGINX_PORT};
+	server_name ${NGINX_SERVER};
+	location /api/ {
+		proxy_pass http://backend:${BACKEND_PORT};
+	}
+
+	location / {
+		root /var/www/client;
+		try_files $uri $uri/ /index.html;
+	}
+}
