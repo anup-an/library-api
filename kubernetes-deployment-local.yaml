@@ -1,0 +1,248 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-pv
+spec:
+  capacity:
+    storage: 4Gi
+  volumeMode: Filesystem
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /var/lib/postgresql/data/
+    type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: host-pvc
+spec:
+  volumeName: host-pv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 4Gi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-env
+data:
+  SECRET_KEY: django-insecure-2ld^#(5glx*j5x09mg9!(qg(+6!@)mcddmq3$vg-5qaj3)$63v
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: db-library
+  POSTGRES_HOST: database-service
+  POSTGRES_PORT: "5432"
+  BACKEND_PORT: "8000"
+  BACKEND_SERVER: http://backend-service:8000
+  NGINX_SERVER: http://localhost
+  NGINX_PORT: "80"
+  BACKEND_HOST: backend-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend-pod
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend-pod
+  ports:
+    - protocol: "TCP"
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+spec:
+  selector:
+    app: database-pod
+  ports:
+    - protocol: "TCP"
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-pod
+  template:
+    metadata:
+      labels:
+        app: frontend-pod
+    spec:
+      containers:
+        - name: frontend
+          image: anuppoudel/library_project-frontend
+          env:
+            - name: BACKEND_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: BACKEND_PORT
+            - name: BACKEND_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: BACKEND_SERVER
+            - name: NGINX_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: NGINX_SERVER
+            - name: NGINX_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: NGINX_PORT
+          imagePullPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database-pod
+  template:
+    metadata:
+      labels:
+        app: database-pod
+    spec:
+      containers:
+        - name: database
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_PORT
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_DB
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data/
+              name: database-volume
+      volumes:
+        - name: database-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-pod
+  template:
+    metadata:
+      labels:
+        app: backend-pod
+    spec:
+      initContainers:
+        - name: init-container
+          image: busybox
+          command: ["sh", "-c", "until nc -z -v -w5 database-service 5432; do echo 'Waiting for PostgreSQL to start...'; sleep 5; done;"]
+
+      containers:
+        - name: backend
+          image: anuppoudel/library_project-backend:latest
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: SECRET_KEY
+
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_PORT
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_DB
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: POSTGRES_HOST
+            - name: BACKEND_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: BACKEND_HOST
+            - name: NGINX_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: NGINX_SERVER
+            
+          imagePullPolicy: Always
+
+
