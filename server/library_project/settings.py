@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [env('NGINX_UPSTREAM')]
+ALLOWED_HOSTS = [env('BACKEND_HOST')]
 
 CORS_ALLOW_CREDENTIALS = True
 
