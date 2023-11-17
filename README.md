@@ -35,13 +35,21 @@ The main technologies used for building and running the application are listed b
 The application has its own login system which is managed in the server using Django session authentication. 
 
 ## Getting started
-To get the full-stack application running locally follow these steps:
+After cloning this repository, you can get the full-stack application running locally follow steps:
 - Clone this repository
+#### Using docker-compose
 - Install docker (https://docs.docker.com/get-docker/)
 - Add `.env` file to the root directory. Add variables included in `env.example` file to `.env` file. You may also generate your own secret key for Django app.
 - `docker compose build` to build the application in the root folder
-- `docker compose up -d` to start the application. The application can be accessed at http://localhost/ or any other address that you have added for NGINX_SERVER in .env file.
+- `docker compose up -d` to start the application. The application can be accessed at http://localhost/.
 - `docker compose down` to close the application
+#### Using kubernetes
+- Install docker (https://docs.docker.com/get-docker/)
+- Install minikube. You can find the instructions here (https://minikube.sigs.k8s.io/docs/start/)
+- Start minikube using the following command `minikube start` in the terminal
+- Run the following command in your terminal `kubectl apply -f=kubernetes-deployment-local.yaml`
+- Run the ccommand in the terminal `minikube tunnel`
+- The application can then be accessed at http://localhost/
 
 
 
