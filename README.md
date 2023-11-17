@@ -24,6 +24,7 @@ The main technologies used for building and running the application are listed b
 - [Django](https://www.djangoproject.com/) - A python framework for building web applications
 - [Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)  - A software used to build, test, and deploy applications.
 - [Nginx](https://www.nginx.com/) - A web server that can be used as a reverse proxy, load balancer, mail cache and HTTP cache.
+- [Kubernetes](https://kubernetes.io/) - An open-source system for automating deployment, scaling, and management of containerized applications.
 
 ### Application features
 #### General
