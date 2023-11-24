@@ -3,7 +3,7 @@ import { BookDecoder, BookListDecoder } from "src/decoders/book";
 import { ApiData } from "src/types/ApiTypes";
 import { Book } from "src/types/book";
 import { CollectionPayload } from "src/types/common";
-import { API_URL } from "src/utils/constants";
+import { REACT_APP_API_URL } from "src/utils/constants";
 
 export const fetchBooks = async (
   queryString: string
@@ -21,7 +21,7 @@ export const fetchBooks = async (
     page_size: 20,
   };
  */
-  const queryUrl = `${API_URL}${queryString}`;
+  const queryUrl = `${REACT_APP_API_URL}${queryString}`;
 
   return await axios.get<CollectionPayload<Book>, ApiError>(
     queryUrl,
@@ -32,5 +32,5 @@ export const fetchBooks = async (
 export const fetchBookDetails = async (
   id: string
 ): Promise<ApiData<Book, ApiError>> => {
-  return await axios.get<Book, ApiError>(`${API_URL}/books/${id}`, BookDecoder);
+  return await axios.get<Book, ApiError>(`${REACT_APP_API_URL}/books/${id}`, BookDecoder);
 };
