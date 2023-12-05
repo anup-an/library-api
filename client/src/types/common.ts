@@ -33,3 +33,8 @@ export interface CollectionPayload<T> {
   previous: Nullable<string>;
   results: T[];
 }
+
+export interface NotificationType {
+  status: "error" | "success" | "warning" | "info" | null;
+  description: Nullable<string>;
+}

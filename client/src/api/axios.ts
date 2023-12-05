@@ -51,7 +51,12 @@ export const parseError = <T>(error: any): ApiData<T, ApiError> => {
 };
 
 export const getErrorMessage = (error: ApiError) => {
-  const handledErrors = ["invalid", "authentication_failed"];
+  const handledErrors = [
+    "invalid",
+    "authentication_failed",
+    "not_authenticated",
+    "not_found",
+  ];
   const message = _.isString(error.description)
     ? error.description
     : _.values(error.description).flat(1)[0];
