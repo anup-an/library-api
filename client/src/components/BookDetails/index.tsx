@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ApiError } from "src/api/axios";
+import { ApiError, getErrorMessage } from "src/api/axios";
 import { fetchBookDetails } from "src/api/book";
 import { borrowBook } from "src/api/user";
 import {
@@ -12,12 +12,15 @@ import {
   isLoading,
   isSuccess,
   loading,
+  unrequested,
 } from "src/types/ApiTypes";
 import { Book } from "src/types/book";
 import Loader from "src/components/ui/Loader";
 import ErrorFetch from "src/components/ui/ErrorFetch";
 import { Button } from "@chakra-ui/react";
 import Details from "./Details";
+import { NotificationType } from "src/types/common";
+import Notification from "../ui/Notification";
 
 const BOOK_FORMAT_MAPPING = {
   h: "Hard cover",
@@ -54,14 +57,36 @@ const BookDetails = () => {
   const { id } = useParams();
   const [book, setBook] = useState<Nullable<Book>>(null);
   const [bookFetch, setBookFetch] = useState<ApiData<Book, ApiError>>(loading);
+  const [borrowFetch, setBorrowFetch] =
+    useState<ApiData<unknown, ApiError>>(unrequested);
+  const [notification, setNotification] = useState<NotificationType>({
+    status: null,
+    description: null,
+  });
 
   const handleBorrow = async (id: number) => {
-    const response = await borrowBook(id);
-    if (!isSuccess(response)) {
-      alert(
-        "Failed to borrow book. Please make sure you are already logged in to perform this action"
-      );
-    }
+    setNotification({ ...notification, status: null, description: null });
+    setBorrowFetch(loading);
+    const borrowResponse = await borrowBook(id);
+    setBorrowFetch(borrowResponse);
+    applyApiEffect(
+      borrowResponse,
+      () => {
+        setNotification({
+          ...notification,
+          status: "success",
+          description: "Book borrowed successfully.",
+        });
+      },
+      (error) => {
+        const errorMessage = getErrorMessage(error);
+        setNotification({
+          ...notification,
+          status: "error",
+          description: `Failed to borrow book. ${errorMessage}`,
+        });
+      }
+    );
   };
 
   const handleBookFetch = async (id: string) => {
@@ -112,6 +137,9 @@ const BookDetails = () => {
 
   return (
     <Box fontSize="16px">
+      <Box marginBottom="20px">
+        <Notification notificationObject={notification} />
+      </Box>
       <Flex
         alignItems={["center", "center", "center", "flex-end"]}
         gap="30px"
@@ -136,6 +164,8 @@ const BookDetails = () => {
             variant="solid"
             onClick={() => handleBorrow(book.id)}
             marginTop="20px"
+            isLoading={isLoading(borrowFetch)}
+            loadingText="Borrowing"
           >
             Borrow
           </Button>
