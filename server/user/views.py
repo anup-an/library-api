@@ -1,12 +1,12 @@
 from datetime import date, timedelta
 from django.contrib.auth import login, logout
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
 from django.db import transaction
 from book.models import BookInstance
+from common.utils import get_objects_for_update
 from user.models import User
 from user.serializers import UserLoginSerializer, UserRegistrationSerializer, UserSerializer
 
@@ -23,8 +23,12 @@ class UserView(viewsets.ModelViewSet):
     def borrow_book(self, request):
         id = request.data.get('id')
         with transaction.atomic():
-            book = BookInstance.objects.select_for_update().get(
-                book_id=id, status='f')
+            book = get_objects_for_update(
+                BookInstance,
+                "Book not available for borrowing.",
+                book_id=id,
+                status='f'
+            )
             book.status = 'l'
             book.due_date = date.today() + timedelta(weeks=2)
             book.save()
