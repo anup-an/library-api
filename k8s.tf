@@ -9,7 +9,7 @@ terraform {
       version = "2.23.0"
     }
     helm = {
-      source = "hashicorp/helm"
+      source  = "hashicorp/helm"
       version = "2.11.0"
     }
   }
@@ -29,78 +29,54 @@ resource "helm_release" "nginx_ingress_chart" {
     name  = "service.annotations.kubernetes\\.digitalocean\\.com/load-balancer-id"
     value = digitalocean_loadbalancer.ingress_load_balancer.id
   }
+
   depends_on = [
     digitalocean_loadbalancer.ingress_load_balancer,
   ]
 }
 
 
-
 resource "digitalocean_kubernetes_cluster" "library" {
-  name   = var.name
-  region = var.region
-  # Grab the latest version slug from `doctl kubernetes options versions`
+  name    = var.name
+  region  = var.region
   version = "1.28.2-do.0"
 
   node_pool {
-    name       = "worker-pool"
-    size       = "s-2vcpu-2gb"
+    name       = "${var.name}-worker-pool"
+    size       = "s-1vcpu-2gb"
     node_count = var.node_count
   }
 }
 
+resource "digitalocean_domain" "library_app_domain" {
+  name = var.app_domain
+}
+
 resource "digitalocean_loadbalancer" "ingress_load_balancer" {
-  name   = "${var.name}-lb"
-  region = var.region
-  size = "lb-small"
-  algorithm = "round_robin"
-
+  name                   = "${var.name}-lb"
+  region                 = var.region
+  size                   = "lb-small"
+  algorithm              = "round_robin"
+  redirect_http_to_https = true
   forwarding_rule {
-    entry_port     = 80
-    entry_protocol = "http"
+    entry_port     = 443
+    entry_protocol = "https"
 
-    target_port     = 80
-    target_protocol = "http"
+    target_port      = 30193
+    target_protocol  = "https"
+    certificate_name = var.ssl_certificate.NAME
   }
-
-  lifecycle {
-      ignore_changes = [
-        forwarding_rule,
-    ]
+  forwarding_rule {
+    entry_port      = 80
+    entry_protocol  = "tcp"
+    target_port     = 32707
+    target_protocol = "tcp"
   }
-
+  healthcheck {
+    port     = 32707
+    protocol = "tcp"
+  }
 }
-
-resource "digitalocean_domain" "top_level_domains" {
-    for_each = toset(var.domains)
-    name = each.value
-}
-
-resource "digitalocean_record" "a_records" {
-  for_each = toset(var.domains)
-  domain = each.value
-  type   = "A"
-  ttl = 60
-  name   = "@"
-  value  = digitalocean_loadbalancer.ingress_load_balancer.ip
-  depends_on = [
-    digitalocean_domain.top_level_domains,
-    kubernetes_ingress_v1.app_ingress
-  ]
-}
-
-resource "digitalocean_record" "cname_redirects" {
-  for_each = toset(var.domains)
-  domain = each.value
-  type   = "CNAME"
-  ttl = 60
-  name   = "www"
-  value  = "@"
-  depends_on = [
-    digitalocean_domain.top_level_domains,
-  ]
-}
-
 
 
 provider "kubernetes" {
@@ -296,17 +272,18 @@ resource "kubernetes_ingress_v1" "app_ingress" {
   metadata {
     name = "app-ingress"
     annotations = {
-      "nginx.ingress.kubernetes.io/rewrite-target": "/"
+      "nginx.ingress.kubernetes.io/rewrite-target" : "/"
     }
   }
 
   spec {
     ingress_class_name = "nginx"
     rule {
-      host = "www.openlibray.online"
+      host = var.app_domain
       http {
         path {
-          path = "/"
+          path      = "/"
+          path_type = "Prefix"
           backend {
             service {
               name = kubernetes_service.frontend-service.metadata[0].name
