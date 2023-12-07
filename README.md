@@ -10,9 +10,13 @@ This is a full-stack library web application built using React and Django framew
       - [General](#general)
       - [Authentication system](#authentication-system)
   - [Getting started](#getting-started)
+      - [Using docker-compose](#using-docker-compose)
+      - [Using kubernetes](#using-kubernetes)
 
 ## About The Project
 ![Frontpage](client/public/frontpage.png)
+![Booklistpage](client/public/booklist.png)
+
 
 ### Built With
 
