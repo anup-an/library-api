@@ -1,5 +1,5 @@
 # About the app
-This is a full-stack library web application built using React and Django frameworks. The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b
+This is a full-stack library web application built using React and Django frameworks. The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b . The application can be accessed at https://www.bookslibrary.app .
 
 # Table of contents
 - [About the app](#about-the-app)
@@ -25,6 +25,7 @@ The main technologies used for building and running the application are listed b
 - [Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)  - A software used to build, test, and deploy applications.
 - [Nginx](https://www.nginx.com/) - A web server that can be used as a reverse proxy, load balancer, mail cache and HTTP cache.
 - [Kubernetes](https://kubernetes.io/) - An open-source system for automating deployment, scaling, and management of containerized applications.
+- [Terraform](https://www.terraform.io/) - An infrastructure as code tool that lets you define both cloud and on-prem resources in human-readable configuration files that you can version, reuse, and share.
 
 ### Application features
 #### General
