@@ -6,20 +6,29 @@ const RegisterPage = () => {
   return (
     <Box
       display="flex"
-      h="100vh"
+      h={["70vh", "70vh", "70vh", "100vh"]}
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent="center"
+      flexDirection={["column", "column", "row", "row"]}
     >
       <Flex
-        w="50%"
+        w={["100%", "100%", "100%", "50%"]}
         display={["none", "none", "none", "flex"]}
         justifyContent="center"
       >
         <TagLine />
       </Flex>
-      <Flex w={["100%", "100%", "100%", "50%"]} justifyContent="center">
-        <Register />
-      </Flex>
+      <Box
+        w={["100%", "100%", "100%", "50%"]}
+        marginTop={["10vh", "10vh", "0vh"]}
+        justifyContent="center"
+      >
+        <Flex justifyContent="center">
+          <Box w={["100%", "100%", "450px", "450px"]}>
+            <Register />
+          </Box>
+        </Flex>
+      </Box>
     </Box>
   );
 };

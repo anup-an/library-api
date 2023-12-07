@@ -1,5 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
-
+import { Box, Flex } from "@chakra-ui/react";
 import Login from "src/components/Login";
 import TagLine from "src/components/ui/TagLine";
 
@@ -14,8 +13,8 @@ const LoginPage = () => {
     >
       <Flex
         w={["100%", "100%", "100%", "50%"]}
-        justifyContent="center"
         display={["none", "none", "none", "flex"]}
+        justifyContent="center"
       >
         <TagLine />
       </Flex>
