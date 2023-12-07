@@ -14,7 +14,7 @@ const LandingPage = () => {
     <Box>
       <Box
         w="100%"
-        h="250px"
+        h={["150px","250px"]}
         bgGradient="linear(to-r, teal.100, teal.500)"
         boxShadow="2xl"
         borderTop="5px"
@@ -26,15 +26,15 @@ const LandingPage = () => {
         width="100%"
         alignItems="flex-end"
         gap="40px"
-        marginTop="-80px"
+        marginTop={["0px", "-140px", "-80px", "-120px", "-80px"]}
         marginBottom="40px"
       >
-        <Box w="350px" marginLeft="7vw" height="440px">
+        <Box w="350px" marginLeft="7vw" height="440px" display={["none", "block", "block", "flex"]}>
           <img src="/book_unsplash_image.jpeg" alt="Books" />
         </Box>
         <Flex
           p={["7vw", "7vw", "7vw", "0px"]}
-          flexDirection={["row", "row", "row", "column"]}
+          flexDirection="column"
         >
           <Box>
             <Text fontFamily="cursive" fontSize="xl">
@@ -43,7 +43,7 @@ const LandingPage = () => {
             <Text
               bgGradient="linear(to-l, orange.200, orange.400)"
               bgClip="text"
-              fontSize="3xl"
+              fontSize={["xl","3xl"]}
               fontWeight="extrabold"
               marginRight="8vw"
             >
@@ -54,7 +54,7 @@ const LandingPage = () => {
             <Button
               colorScheme="teal"
               variant="solid"
-              marginTop="50px"
+              marginTop="20px"
               onClick={redirectToBooksPage}
             >
               Browse

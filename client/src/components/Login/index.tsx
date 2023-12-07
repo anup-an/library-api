@@ -93,7 +93,16 @@ const Login = () => {
   }
 
   return (
-    <Box w="450px" boxShadow="2xl" p="20px" border="white" borderRadius="10px">
+    <Box boxShadow="2xl" p="20px" border="white" borderRadius="10px">
+      <Text
+        bgGradient="linear(to-l, orange.200, orange.400)"
+        bgClip="text"
+        fontSize="2xl"
+        fontWeight="extrabold"
+        textAlign="center"
+      >
+        Log In
+      </Text>
       <form onSubmit={handleLogin}>
         {errorMessage && !loading ? (
           <Alert status="error">
