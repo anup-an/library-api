@@ -10,3 +10,16 @@ env
 server/env
 server/.env
 db.sqlite3
+.terraform
+.crt
+.p7b
+.pem
+.key
+.csr
+certs
+terraform.tfstate
+terraform.tfstate.backup
+kubeconfig.yaml
+.terraform.lock.hcl
+variables.tf
+prod.env.example
