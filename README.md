@@ -1,5 +1,5 @@
 # About the app
-This is a full-stack library web application built using React and Django frameworks. The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b . The application can be accessed at https://www.bookslibrary.app .
+This is a full-stack library web application built using React and Django frameworks. The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b . The application is deployed to digitalocean using digitalocean kubernetes service (DOKS) and the deployment is managed using Terraform. The application can be accessed at https://www.bookslibrary.app .
 
 # Table of contents
 - [About the app](#about-the-app)
