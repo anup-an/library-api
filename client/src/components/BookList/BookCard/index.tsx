@@ -33,7 +33,7 @@ const BookCard = (props: IProps) => {
               src={book.book_image || undefined}
               alt={book.title}
               borderRadius="lg"
-              height={400}
+              height={[300, 300, 300, 300, 300, 400]}
             />
           </Box>
           <Stack mt="6" spacing="3">
