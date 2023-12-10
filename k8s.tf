@@ -150,6 +150,42 @@ resource "kubernetes_service" "frontend-service" {
   }
 }
 
+# persistent volume
+resource "kubernetes_persistent_volume" "library_database_volume" {
+  metadata {
+    name = "library-database-volume"
+  }
+  spec {
+    capacity = {
+      storage = "5Gi"
+    }
+    volume_mode        = "Filesystem"
+    storage_class_name = "standard"
+    access_modes       = ["ReadWriteOnce"]
+    persistent_volume_source {
+      host_path {
+        path = "/var/lib/postgresql/data/"
+        type = "DirectoryOrCreate"
+      }
+    }
+  }
+}
+
+# persistent volume claim
+resource "kubernetes_persistent_volume_claim" "library_database_volume_claim" {
+  metadata {
+    name = "library-database-volume-claim"
+  }
+  spec {
+    access_modes = ["ReadWriteOnce"]
+    resources {
+      requests = {
+        storage = "5Gi"
+      }
+    }
+  }
+}
+
 # database deployment
 
 resource "kubernetes_deployment" "database-deployment" {
@@ -182,10 +218,21 @@ resource "kubernetes_deployment" "database-deployment" {
               value = env.value
             }
           }
+          volume_mount {
+            name       = kubernetes_persistent_volume.library_database_volume.metadata[0].name
+            mount_path = "/var/lib/postgresql/data/"
+          }
+        }
+        volume {
+          name = kubernetes_persistent_volume.library_database_volume.metadata[0].name
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.library_database_volume_claim.metadata[0].name
+          }
         }
       }
     }
   }
+  depends_on = [kubernetes_persistent_volume.library_database_volume, kubernetes_persistent_volume_claim.library_database_volume_claim]
 }
 
 # backend deployment
