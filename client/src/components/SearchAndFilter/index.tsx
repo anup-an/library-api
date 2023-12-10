@@ -96,7 +96,7 @@ const SearchAndFilter = (props: IProps) => {
                 borderColor="black"
                 placeholder="Search"
                 onChange={onSearchInputChange}
-                minWidth={["300px", "350px"]}
+                minWidth={["100px", "350px"]}
               />
               <InputRightElement
                 children={
