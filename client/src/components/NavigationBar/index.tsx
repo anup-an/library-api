@@ -1,6 +1,15 @@
 import _ from "lodash";
-import { NavLink, useLocation } from "react-router-dom";
-import { Box, Button, Divider, Flex } from "@chakra-ui/react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Avatar,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { DispatchContext, StateContext } from "src/App";
 import { authenticated, unauthenticated } from "src/types/authenticate";
@@ -13,6 +22,7 @@ const NavigationBar = () => {
   const { state } = useContext(StateContext);
   const { dispatch } = useContext(DispatchContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const [isloggingOut, setIsLoggingOut] = useState<boolean>(false);
 
   const logOut = async () => {
@@ -37,6 +47,11 @@ const NavigationBar = () => {
     }
     return location.pathname.includes(navItem);
   };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <>
       <Box
@@ -85,7 +100,7 @@ const NavigationBar = () => {
               </Box>
               <Box
                 padding="5px"
-                marginLeft="40px"
+                marginLeft="30px"
                 className={`${isSelected("register") ? "nav-select" : ""}`}
                 _hover={{
                   color: "teal",
@@ -98,27 +113,48 @@ const NavigationBar = () => {
             ""
           )}
           {state.authStatus === authenticated ? (
-            <>
-              <Box h="100%">
-                <Button
-                  colorScheme="white"
-                  padding="5px"
-                  height="34px"
-                  color="white"
-                  variant="outline"
-                  onClick={logOut}
-                  border="none"
-                  isLoading={isloggingOut}
-                  marginLeft="40px"
-                  background={isloggingOut ? "white" : "orange"}
-                  _hover={{
-                    color: "teal",
-                  }}
+            <Box marginLeft="30px">
+              <Menu autoSelect={false}>
+                <MenuButton aria-label="Options">
+                  <Avatar size="sm" />
+                </MenuButton>
+                <MenuList
+                  bg="orange"
+                  width={["250px", "300px"]}
+                  paddingTop="0"
+                  borderRadius="5px"
                 >
-                  Logout
-                </Button>
-              </Box>
-            </>
+                  <MenuItem
+                    bg={`${isSelected("/user") ? "white" : "orange"}`}
+                    color={`${isSelected("/user") ? "green" : "white"}`}
+                    borderTopRadius="4px"
+                    borderBottom="1px"
+                    borderColor="gray.200"
+                    onClick={() => handleNavigation("/user")}
+                    fontWeight="bold"
+                    _hover={{
+                      bg: "gray.200",
+                      color: "gray",
+                    }}
+                  >
+                    Profile
+                  </MenuItem>
+                  <Flex h="100%" paddingTop="10px" justifyContent="center">
+                    <Button
+                      padding="10px"
+                      height="30px"
+                      colorScheme="teal"
+                      variant="solid"
+                      onClick={logOut}
+                      isLoading={isloggingOut}
+                      loadingText="Logging out"
+                    >
+                      Logout
+                    </Button>
+                  </Flex>
+                </MenuList>
+              </Menu>
+            </Box>
           ) : (
             ""
           )}
