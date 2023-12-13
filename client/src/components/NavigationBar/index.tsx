@@ -110,9 +110,6 @@ const NavigationBar = () => {
               </Box>
             </>
           ) : (
-            ""
-          )}
-          {state.authStatus === authenticated ? (
             <Box marginLeft="30px">
               <Menu autoSelect={false}>
                 <MenuButton aria-label="Options">
@@ -155,8 +152,6 @@ const NavigationBar = () => {
                 </MenuList>
               </Menu>
             </Box>
-          ) : (
-            ""
           )}
         </Box>
       </Box>

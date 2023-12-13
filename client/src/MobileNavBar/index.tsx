@@ -26,6 +26,7 @@ const navigationConfig = [
   { name: "Books", pathname: "/books" },
   { name: "Login", pathname: "/login", hideOnAuthentication: true },
   { name: "Signup", pathname: "/register", hideOnAuthentication: true },
+  { name: "User profile", pathname: "/user", hideOnAuthentication: false },
 ];
 const MobileNavBar = () => {
   const { state } = useContext(StateContext);
@@ -86,7 +87,9 @@ const MobileNavBar = () => {
           bg="orange"
           width={["250px", "300px"]}
           paddingTop="0"
-          paddingBottom={`${state.authStatus === authenticated ? "10px" : "0px"}`}
+          paddingBottom={`${
+            state.authStatus === authenticated ? "10px" : "0px"
+          }`}
           borderRadius="5px"
         >
           {navigationConfig.map((config, index) => (
