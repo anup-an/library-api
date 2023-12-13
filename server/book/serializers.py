@@ -14,5 +14,5 @@ class BookInstanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookInstance
-        fields = '__all__'
+        fields = ['id', 'book', 'due_date', 'status']
         depth = 2

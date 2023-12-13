@@ -64,6 +64,7 @@ class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                           help_text='Unique ID for the book')
     book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
+    user = models.ForeignKey('user.User', related_name="books_onloan", on_delete=models.RESTRICT, null=True)
     due_date = models.DateField(null=True, blank=True)
 
     LOAN_STATUS = (

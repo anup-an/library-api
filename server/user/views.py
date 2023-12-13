@@ -39,13 +39,16 @@ class UserView(viewsets.ModelViewSet):
     def return_book(self, request):
         id = request.data.get('id')
         with transaction.atomic():
-            book = BookInstance.objects.get(
-                id=id)
+            book = get_objects_for_update(
+                BookInstance,
+                "Book not found.",
+                id=id           
+            )            
             book.status = 'f'
             book.due_date = None
             book.save()
             user = User.objects.get(id=request.user.id)
-            user.books_onloan.delete(book)
+            user.books_onloan.remove(book)
             return Response('Book returned successfully', status=status.HTTP_200_OK)
 
 
