@@ -22,11 +22,21 @@ import {
 } from "src/types/authenticate";
 
 const navigationConfig = [
-  { name: "Home", pathname: "/" },
-  { name: "Books", pathname: "/books" },
-  { name: "Login", pathname: "/login", hideOnAuthentication: true },
-  { name: "Signup", pathname: "/register", hideOnAuthentication: true },
-  { name: "User profile", pathname: "/user", hideOnAuthentication: false },
+  {
+    name: "Home",
+    pathname: "/",
+    isAlwaysVisible: true,
+    showOnAuthentication: true,
+  },
+  {
+    name: "Books",
+    pathname: "/books",
+    isAlwaysVisible: true,
+    showOnAuthentication: true,
+  },
+  { name: "Login", pathname: "/login", showOnAuthentication: false },
+  { name: "Signup", pathname: "/register", showOnAuthentication: false },
+  { name: "User profile", pathname: "/user", showOnAuthentication: true },
 ];
 const MobileNavBar = () => {
   const { state } = useContext(StateContext);
@@ -104,10 +114,11 @@ const MobileNavBar = () => {
                 borderBottom="1px"
                 borderColor="gray.200"
                 display={`${
-                  config.hideOnAuthentication &&
-                  isAuthenticated(state.authStatus)
-                    ? "none"
-                    : "block"
+                  config.isAlwaysVisible ||
+                  config.showOnAuthentication ===
+                    isAuthenticated(state.authStatus)
+                    ? "block"
+                    : "none"
                 }`}
                 onClick={() => handleNavigation(config.pathname)}
                 fontWeight="bold"
