@@ -44,6 +44,7 @@ data:
   NGINX_SERVER: http://localhost
   NGINX_PORT: "80"
   BACKEND_HOST: backend-service
+  ALLOWED_SERVER: http://localhost
 ---
 apiVersion: v1
 kind: Service
@@ -105,7 +106,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: anuppoudel/library_project-frontend
+          image: anuppoudel/library_project-frontend-local
           env:
             - name: BACKEND_PORT
               valueFrom:
@@ -199,7 +200,7 @@ spec:
 
       containers:
         - name: backend
-          image: anuppoudel/library_project-backend:latest
+          image: anuppoudel/library_project-backend-local
           env:
             - name: SECRET_KEY
               valueFrom:
@@ -242,6 +243,11 @@ spec:
                 configMapKeyRef:
                   name: my-env
                   key: NGINX_SERVER
+            - name: ALLOWED_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: my-env
+                  key: ALLOWED_SERVER
             
           imagePullPolicy: Always
 
