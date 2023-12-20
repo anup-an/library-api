@@ -36,7 +36,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.build("anuppoudel/library_project-frontend:${BUILD_NUMBER}")
+                        docker.build("anuppoudel/library_project-frontend:${BUILD_NUMBER}", "./client")
                     }
                 }
             }
