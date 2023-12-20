@@ -8,6 +8,11 @@ pipeline {
                     containers:
                     - name: docker
                       image: docker:latest
+                      resources:
+                        requests:
+                          memory: "100Mi"
+                        limits:
+                          memory: "200Mi"
                       command:
                       - cat
                       tty: true
