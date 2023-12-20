@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    dockerhub_credentials_id="dockerhub_credentials_id"
+
+    stages {
+        stage('Checkout scm') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("anuppoudel/library_project-frontend:${BUILD_NUMBER}")
+                }
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', dockerhub_credentials_id) {
+                        docker.image("anuppoudel/library_project-frontend:${BUILD_NUMBER}").push()
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+        }
+    }
+}
+
