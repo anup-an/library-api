@@ -1,6 +1,8 @@
 pipeline {
     agent any
-    dockerhub_credentials_id="dockerhub_credentials_id"
+    environment {
+        dockerhub_credentials_id="dockerhub_credentials_id"
+    }
 
     stages {
         stage('Checkout scm') {
