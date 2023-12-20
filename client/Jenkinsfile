@@ -1,5 +1,25 @@
 pipeline {
-    agent any
+    agent 
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: docker
+            image: docker:latest
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+             - mountPath: /var/run/docker.sock
+               name: docker-sock
+          volumes:
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock    
+        '''
+    }
     environment {
         dockerhub_credentials_id="dockerhub_credentials_id"
     }
@@ -13,17 +33,21 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("anuppoudel/library_project-frontend:${BUILD_NUMBER}")
+                container('docker') {
+                    script {
+                        docker.build("anuppoudel/library_project-frontend:${BUILD_NUMBER}")
+                    }
                 }
             }
         }
 
         stage('Push Docker Image to DockerHub') {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', dockerhub_credentials_id) {
-                        docker.image("anuppoudel/library_project-frontend:${BUILD_NUMBER}").push()
+                container('docker') {
+                    script {
+                        docker.withRegistry('https://registry.hub.docker.com', dockerhub_credentials_id) {
+                            docker.image("anuppoudel/library_project-frontend:${BUILD_NUMBER}").push()
+                        }
                     }
                 }
             }
