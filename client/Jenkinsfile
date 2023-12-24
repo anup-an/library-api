@@ -27,7 +27,7 @@ pipeline {
         }
     }
     environment {
-        dockerhub_credentials_id="dockerhub_credentials_id"
+        dockerhub_credentials_id="docker-credentials-id"
     }
 
     stages {
