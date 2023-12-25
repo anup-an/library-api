@@ -69,7 +69,7 @@ pipeline {
 
         stage('Deploy image') {
             steps {
-                container('docker') {
+                container('kubectl') {
                     script {
                         sh "kubectl set image deployment/frontend-deployment frontend=anuppoudel/library_project-frontend-local-terraform:latest"
                     }
