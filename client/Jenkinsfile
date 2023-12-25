@@ -71,6 +71,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
+                        sh "export KUBECONFIG=~/.kube/config"
                         sh "kubectl set image deployment/frontend-deployment frontend=anuppoudel/library_project-frontend-local-terraform:latest"
                     }
                 }
