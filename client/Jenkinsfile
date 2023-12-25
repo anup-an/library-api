@@ -41,7 +41,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.build("anuppoudel/library_project-frontend:${BUILD_NUMBER}", "./client")
+                        docker.build("anuppoudel/library_project-frontend-local-terraform:latest", "./client")
                     }
                 }
             }
@@ -52,9 +52,17 @@ pipeline {
                 container('docker') {
                     script {
                         docker.withRegistry('https://registry.hub.docker.com', dockerhub_credentials_id) {
-                            docker.image("anuppoudel/library_project-frontend:${BUILD_NUMBER}").push()
+                            docker.image("anuppoudel/library_project-frontend-local-terraform:latest").push()
                         }
                     }
+                }
+            }
+        }
+
+        stage('Deploy image') {
+            steps {
+                script {
+                    sh "kubectl set image deployment/frontend-deployment frontend=anuppoudel/library_project-frontend-local-terraform:latest"
                 }
             }
         }
