@@ -19,6 +19,12 @@ pipeline {
                       volumeMounts:
                         - mountPath: /var/run/docker.sock
                           name: docker-sock
+                    - name: kubectl
+                      image: bitnami/kubectl:latest
+                      command:
+                      - cat
+                      tty: true
+
                     volumes:
                       - name: docker-sock
                         hostPath:
@@ -61,8 +67,10 @@ pipeline {
 
         stage('Deploy image') {
             steps {
-                script {
-                    sh "kubectl set image deployment/frontend-deployment frontend=anuppoudel/library_project-frontend-local-terraform:latest"
+                container('docker') {
+                    script {
+                        sh "kubectl set image deployment/frontend-deployment frontend=anuppoudel/library_project-frontend-local-terraform:latest"
+                    }
                 }
             }
         }
