@@ -36,6 +36,7 @@ pipeline {
     }
     environment {
         dockerhub_credentials_id="docker-credentials-id"
+        env_file_image=credentials("env-file")
     }
 
     stages {
@@ -49,8 +50,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.build("anuppoudel/library_project-frontend-local-terraform:latest", "./client")
-                    }
+                        sh 'docker build --env-file ${env_file_image} -t anuppoudel/library_project-frontend-local-terraform:latest ./client'                    }
                 }
             }
         }
