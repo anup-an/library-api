@@ -1,8 +1,4 @@
 pipeline {
-    environment {
-        dockerhub_credentials_id=credentials("docker-credentials-id")
-    }
-
     agent {
         kubernetes {
             yaml '''
@@ -41,6 +37,10 @@ pipeline {
             '''
         }
     }
+    environment {
+        dockerhub_credentials_id=credentials("docker-credentials-id")
+    }
+
 
     stages {
         stage('Checkout scm') {
