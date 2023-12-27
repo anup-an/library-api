@@ -2,13 +2,15 @@ FROM node:18 as builder
 
 WORKDIR /app
 
+ARG API_URL
+
 COPY package.json .
 
 RUN yarn install
 
 COPY . .
 
-RUN yarn run build
+RUN REACT_APP_API_URL=${API_URL} yarn run build
 
 FROM nginx:latest
 
