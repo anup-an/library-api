@@ -1,4 +1,8 @@
 pipeline {
+    environment {
+        dockerhub_credentials_id=credentials("docker-credentials-id")
+    }
+
     agent {
         kubernetes {
             yaml '''
@@ -10,6 +14,9 @@ pipeline {
                     containers:
                     - name: docker
                       image: docker:latest
+                      env: 
+                      - name: REACT_APP_API_URL
+                      - value: ${REACT_APP_API_URL} 
                       resources:
                         requests:
                           memory: "100Mi"
@@ -34,10 +41,6 @@ pipeline {
             '''
         }
     }
-    environment {
-        dockerhub_credentials_id="docker-credentials-id"
-        env_file_image=credentials("env-file")
-    }
 
     stages {
         stage('Checkout scm') {
@@ -50,7 +53,8 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        sh 'docker build --env-file ${env_file_image} -t anuppoudel/library_project-frontend-local-terraform:latest ./client'                    }
+                        docker.build("anuppoudel/library_project-frontend-local-terraform:latest", "./client")
+                    }
                 }
             }
         }
