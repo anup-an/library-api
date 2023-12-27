@@ -38,7 +38,7 @@ pipeline {
         }
     }
     environment {
-        dockerhub_credentials_id=credentials("docker-credentials-id")
+        dockerhub_credentials_id=credentials('docker-credentials-id')
     }
 
 
