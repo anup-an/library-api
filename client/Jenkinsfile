@@ -37,10 +37,6 @@ pipeline {
             '''
         }
     }
-    environment {
-        dockerhub_credentials_id=credentials('docker-credentials-id')
-    }
-
 
     stages {
         stage('Checkout scm') {
@@ -53,7 +49,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.build("anuppoudel/library_project-frontend-local-terraform:latest", "./client")
+                        docker.build('anuppoudel/library_project-frontend-local-terraform:latest', './client')
                     }
                 }
             }
@@ -63,8 +59,8 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.withRegistry('https://registry.hub.docker.com', dockerhub_credentials_id) {
-                            docker.image("anuppoudel/library_project-frontend-local-terraform:latest").push()
+                        docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials-id') {
+                            docker.image('anuppoudel/library_project-frontend-local-terraform:latest').push()
                         }
                     }
                 }
