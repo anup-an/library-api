@@ -49,7 +49,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.build('anuppoudel/library_project-frontend-local-terraform:latest', '--build-arg API_URL=${env.REACT_APP_API_URL} ./client')
+                        docker.build('anuppoudel/library_project-frontend-local-terraform:latest', '--build-arg API_URL="http://library-app/api" ./client')
                     }
                 }
             }
