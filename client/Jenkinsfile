@@ -16,7 +16,7 @@ pipeline {
                       image: docker:latest
                       env: 
                       - name: REACT_APP_API_URL
-                      - value: "http://library-app/api"
+                        value: "${env.REACT_APP_API_URL}"
                       resources:
                         requests:
                           memory: "100Mi"
