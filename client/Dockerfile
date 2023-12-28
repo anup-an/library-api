@@ -2,17 +2,11 @@ FROM node:18 as builder
 
 WORKDIR /app
 
-ARG API_URL
-
-RUN echo '${API_URL}'
-
 COPY package.json .
 
 RUN yarn install
 
 COPY . .
-
-RUN REACT_APP_API_URL=${API_URL} yarn build
 
 RUN yarn run build
 
