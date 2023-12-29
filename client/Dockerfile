@@ -2,19 +2,17 @@ FROM node:18 as builder
 
 WORKDIR /app
 
-ARG API_URL
-
-RUN echo '${API_URL}'
-
 COPY package.json .
 
 RUN yarn install
 
+RUN yarn global add cross-env
+
 COPY . .
 
-RUN REACT_APP_API_URL=${API_URL} yarn build
+ARG API_URL
 
-RUN yarn run build
+RUN cross-env REACT_APP_API_URL=${API_URL} yarn run build
 
 FROM nginx:latest
 
