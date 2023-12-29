@@ -6,13 +6,12 @@ COPY package.json .
 
 RUN yarn install
 
-RUN yarn global add cross-env
-
 COPY . .
-
 ARG API_URL
 
-RUN cross-env REACT_APP_API_URL=${API_URL} yarn run build
+RUN echo 'REACT_APP_API_URL=${API_URL}' >> /app/.env
+
+RUN yarn run build
 
 FROM nginx:latest
 
