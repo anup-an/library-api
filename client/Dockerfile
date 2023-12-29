@@ -7,11 +7,10 @@ COPY package.json .
 RUN yarn install
 
 COPY . .
+
 ARG API_URL
 
-RUN echo 'REACT_APP_API_URL=${API_URL}' >> /app/.env
-
-RUN yarn run build
+RUN REACT_APP_API_URL=${API_URL} yarn run build
 
 FROM nginx:latest
 
