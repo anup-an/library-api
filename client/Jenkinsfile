@@ -43,6 +43,9 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            environment {
+                HOME = "${WORKSPACE}"
+            }
             steps {
                 container('docker') {
                     script {
