@@ -8,7 +8,9 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn run build
+ARG API_URL
+
+RUN REACT_APP_API_URL=${API_URL} yarn run build
 
 FROM nginx:latest
 
