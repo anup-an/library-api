@@ -6,13 +6,10 @@ pipeline {
                 kind: Pod
                 spec:
                     securityContext:
-                    runAsUser: 1000
+                      runAsUser: 1000
                     containers:
                     - name: docker
                       image: docker:latest
-                      env: 
-                      - name: REACT_APP_API_URL
-                        value: "http://library-app/api"
                       resources:
                         requests:
                           memory: "100Mi"
@@ -49,7 +46,7 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        docker.build('anuppoudel/library_project-frontend-local-terraform:latest', '--build-arg API_URL="http://library-app/api" ./client')
+                        docker.build("${FRONTEND_IMAGE}:${BUILD_NUMBER}", "--build-arg API_URL=${REACT_APP_API_URL} ./client")
                     }
                 }
             }
@@ -60,7 +57,7 @@ pipeline {
                 container('docker') {
                     script {
                         docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials-id') {
-                            docker.image('anuppoudel/library_project-frontend-local-terraform:latest').push()
+                            docker.image("${FRONTEND_IMAGE}:${BUILD_NUMBER}").push()
                         }
                     }
                 }
@@ -71,7 +68,7 @@ pipeline {
             steps {
                 container('kubectl') {
                     script {
-                        sh "kubectl set image deployment/frontend-deployment frontend=anuppoudel/library_project-frontend-local-terraform:latest"
+                        sh "kubectl set image deployment/frontend-deployment frontend=${FRONTEND_IMAGE}:${BUILD_NUMBER}"
                     }
                 }
             }
