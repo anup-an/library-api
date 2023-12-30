@@ -36,7 +36,16 @@ provider "jenkins" {
 resource "jenkins_job" "frontend-jenkins-job" {
   name = "frontend-jenkins-job"
   template = templatefile("${path.module}/jenkinsfiles/frontend-jenkins-job.xml", {
-    description        = "An example job created from Terraform",
+    description        = "Jenkins pipeline job for frontend",
+    git_repo           = var.jenkins_envs.githubRepository
+    git_credentials_id = var.jenkins_envs.gitCredentialsId
+  })
+}
+
+resource "jenkins_job" "backend-jenkins-job" {
+  name = "backend-jenkins-job"
+  template = templatefile("${path.module}/jenkinsfiles/backend-jenkins-job.xml", {
+    description        = "Jenkins pipeline job for backend",
     git_repo           = var.jenkins_envs.githubRepository
     git_credentials_id = var.jenkins_envs.gitCredentialsId
   })

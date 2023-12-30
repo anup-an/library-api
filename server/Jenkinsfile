@@ -1,0 +1,83 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+                apiVersion: v1
+                kind: Pod
+                spec:
+                    containers:
+                    - name: docker
+                      image: docker:latest
+                      resources:
+                        requests:
+                          memory: "100Mi"
+                        limits:
+                          memory: "200Mi"
+                      command:
+                      - cat
+                      tty: true
+                      volumeMounts:
+                        - mountPath: /var/run/docker.sock
+                          name: docker-sock
+                    - name: kubectl
+                      image: lachlanevenson/k8s-kubectl:v1.24.8
+                      command:
+                      - cat
+                      tty: true
+
+                    volumes:
+                      - name: docker-sock
+                        hostPath:
+                          path: /var/run/docker.sock    
+            '''
+        }
+    }
+
+    stages {
+        stage('Checkout scm') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                container('docker') {
+                    script {
+                        docker.build("${BACKEND_IMAGE}:${BUILD_NUMBER}", "./server")
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                container('docker') {
+                    script {
+                        docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials-id') {
+                            docker.image("${BACKEND_IMAGE}:${BUILD_NUMBER}").push()
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy image') {
+            steps {
+                container('kubectl') {
+                    script {
+                        sh "kubectl set image deployment/backend-deployment backend=${BACKEND_IMAGE}:${BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+        }
+    }
+}
+
