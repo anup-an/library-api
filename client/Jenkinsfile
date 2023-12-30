@@ -5,8 +5,6 @@ pipeline {
                 apiVersion: v1
                 kind: Pod
                 spec:
-                    securityContext:
-                      runAsUser: 1000
                     containers:
                     - name: docker
                       image: docker:latest
