@@ -11,7 +11,7 @@ This is a full-stack library web application built using React and Django framew
       - [Authentication system](#authentication-system)
   - [Getting started](#getting-started)
       - [Using docker-compose](#using-docker-compose)
-      - [Using kubernetes](#using-kubernetes
+      - [Using kubernetes](#using-kubernetes)
   - [CI/CD pipeline](#ci/cd-pipeline)
 
 ## About The Project
