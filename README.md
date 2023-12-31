@@ -1,5 +1,5 @@
 # About the app
-This is a full-stack library web application built using React and Django frameworks. The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b . The application is deployed to digitalocean using digitalocean kubernetes service (DOKS) and the deployment is managed using Terraform. The application can be accessed at https://www.bookslibrary.app .
+This is a full-stack library web application built using React and Django frameworks. The application is deployed to digitalocean using digitalocean kubernetes service (DOKS) and the deployment is managed using Terraform. The application can be accessed at https://www.bookslibrary.app .
 
 # Table of contents
 - [About the app](#about-the-app)
@@ -12,7 +12,7 @@ This is a full-stack library web application built using React and Django framew
   - [Getting started](#getting-started)
       - [Using docker-compose](#using-docker-compose)
       - [Using kubernetes](#using-kubernetes)
-  - [CI/CD pipeline](#ci/cd-pipeline)
+  - [CI/CD pipeline](#ci-cd-pipeline)
 
 ## About The Project
 ![Frontpage](client/public/frontpage.png)
@@ -32,6 +32,8 @@ The main technologies used for building and running the application are listed b
 - [Kubernetes](https://kubernetes.io/) - An open-source system for automating deployment, scaling, and management of containerized applications.
 - [Terraform](https://www.terraform.io/) - An infrastructure as code tool that lets you define both cloud and on-prem resources in human-readable configuration files that you can version, reuse, and share.
 - [Jenkins](https://www.jenkins.io/) - A leading open source automation server, Jenkins provides hundreds of plugins to support building, deploying and automating any project.
+
+The data of books is taken from https://www.kaggle.com/datasets/thedevastator/comprehensive-overview-of-52478-goodreads-best-b .
 
 ### Application features
 #### General
@@ -60,7 +62,7 @@ After cloning this repository, you can get the full-stack application running lo
 - Run the command in the terminal `minikube tunnel`
 - The application can then be accessed at http://localhost/. Make sure than localhost is included in the file `/etc/hosts` in your local machine
 
-## CI/CD pipeline
+## CI CD pipeline
 The CI/CD pipelines for frontend and backend are set up locally using minikube, Jenkins and terraform. Each pipeline build an image from the dockerfile in the github repository, pushes the image to dockerhub and updates the respective kuberbetes deployment. The Jenkins server runs in pod inside the cluster. When the pipeline runs in the Jenkins server, it creates a new pod where the pipeline job runs. After job completion the pod gets deleted.
 
 Here are the steps followed to create it
