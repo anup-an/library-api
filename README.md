@@ -11,7 +11,8 @@ This is a full-stack library web application built using React and Django framew
       - [Authentication system](#authentication-system)
   - [Getting started](#getting-started)
       - [Using docker-compose](#using-docker-compose)
-      - [Using kubernetes](#using-kubernetes)
+      - [Using kubernetes](#using-kubernetes
+  - [CI/CD pipeline](#ci/cd-pipeline)
 
 ## About The Project
 ![Frontpage](client/public/frontpage.png)
@@ -58,6 +59,19 @@ After cloning this repository, you can get the full-stack application running lo
 - Run the following command in your terminal `kubectl apply -f=kubernetes-deployment-local.yaml`
 - Run the command in the terminal `minikube tunnel`
 - The application can then be accessed at http://localhost/. Make sure than localhost is included in the file `/etc/hosts` in your local machine
+
+## CI/CD pipeline
+The CI/CD pipelines for frontend and backend are set up locally using minikube, Jenkins and terraform. Each pipeline build an image from the dockerfile in the github repository, pushes the image to dockerhub and updates the respective kuberbetes deployment. The Jenkins server runs in pod inside the cluster. When the pipeline runs in the Jenkins server, it creates a new pod where the pipeline job runs. After job completion the pod gets deleted.
+
+Here are the steps followed to create it
+- Install and start minikube
+- Using terraform, create all resources in minikube kubernetes cluster neccessary to run the application and Jenkins server. All configurations can be found at `terraform/local` folder in the repository.
+- Install kubernetes and docker plugins if not installed through Jenkins UI.
+- Also, create github and docker hub credentials through Jenkins UI. These credentials are necessary to access github and dockerhub from Jenkins while running the pipeline job.
+- Add neccessary environment variables in Jenkins to be used in the pipeline job created.
+
+You can also create a CI/CD pipeline in your cloud environment adding the terraform configuration for creating Jenkins server and pipelines to your production terraform configuration.
+
 
 
 
